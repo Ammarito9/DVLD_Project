@@ -4,3 +4,136 @@ CREATE DATABASE DVLD;
 GO
 
 USE DVLD;
+
+CREATE TABLE LicenseStatuses (
+	ID INT IDENTITY NOT NULL,
+	StatusName NVARCHAR(50) NOT NULL,
+
+	PRIMARY KEY(ID),
+
+)
+
+CREATE TABLE Nationalities (
+	ID INT IDENTITY NOT NULL,
+	NationalityName NVARCHAR(50) NOT NULL,
+
+	PRIMARY KEY(ID),
+)
+
+CREATE TABLE ApplicationStatuses (
+	ID INT IDENTITY NOT NULL,
+	StatusName NVARCHAR(50) NOT NULL,
+
+	PRIMARY KEY(ID),
+)
+
+CREATE TABLE Tests (
+	ID INT IDENTITY NOT NULL,
+	TestName NVARCHAR(50) NOT NULL,
+	TestFee DECIMAL(10,2) NOT NULL,
+
+	PRIMARY KEY(ID),
+)
+
+
+CREATE TABLE Services (
+	ID INT IDENTITY NOT NULL,
+	ServiceName NVARCHAR(50) NOT NULL,
+	ServiceFee DECIMAL(10,2) NOT NULL,
+
+	PRIMARY KEY(ID),
+)
+
+CREATE TABLE LicenseClasses (
+	ID INT IDENTITY NOT NULL,
+	LicenseClass NVARCHAR(50) NOT NULL,
+	MinimumAllowedAge SMALLMONEY NOT NULL,
+	ValidityLengthInYears SMALLMONEY NOT NULL,
+	ClassFees DECIMAL(10,2) NOT NULL,
+	ClassDescription NVARCHAR(255),
+
+	PRIMARY KEY(ID),
+)
+
+CREATE TABLE Persons (
+	ID INT IDENTITY NOT NULL,
+	NationalityID INT NOT NULL,
+	NationalNumber NVARCHAR(50) NOT NULL,
+	FirstName NVARCHAR(50) NOT NULL,
+	SecondName NVARCHAR(50),
+	ThirdName NVARCHAR(50),
+	LastName NVARCHAR(50) NOT NULL,
+	DateOfBirth DATETIME NOT NULL,
+	Email NVARCHAR(100),
+	Address NVARCHAR(255) NOT NULL,
+	PhoneNumber NVARCHAR(20) NOT NULL,
+	PersonalPhotoPath NVARCHAR(255) NOT NULL,
+
+	PRIMARY KEY(ID),
+)
+
+CREATE TABLE Drivers (
+	ID INT IDENTITY NOT NULL,
+	PersonID INT NOT NULL,
+
+	PRIMARY KEY(ID),
+)
+
+CREATE TABLE Users (
+	ID INT IDENTITY NOT NULL,
+	PersonID INT NOT NULL,
+	Username NVARCHAR(50) NOT NULL,
+	Password NVARCHAR(50) NOT NULL,
+
+	PRIMARY KEY(ID),
+)
+
+CREATE TABLE Licenses (
+	ID INT IDENTITY NOT NULL,
+	DriverID INT NOT NULL,
+	PersonID INT NOT NULL,
+	LicenseClassID INT NOT NULL,
+	LicenseStatusID INT NOT NULL,
+	IssueDate DATETIME NOT NULL,
+	ExpiryDate DATETIME NOT NULL, -- Could be drived by Adding "ValidityLengthInYears" + "IssueDate" = "ExpiryDate", But denormalized for efficincy.
+	LicenseType NVARCHAR(1) NOT NULL,
+	LicenseNumber NVARCHAR(50) NOT NULL,
+	LicenseCondition NVARCHAR(255),
+	LicenseNote NVARCHAR(255),
+
+	PRIMARY KEY(ID),
+)
+
+CREATE TABLE Applications (
+	ID INT IDENTITY NOT NULL,
+	ServiceID INT NOT NULL,
+	PersonID INT NOT NULL,
+	ApplicationStatusID INT NOT NULL,
+	LicenseID INT,
+	RequestedLicenseClassID INT,
+	ApplicationNumber NVARCHAR(50) NOT NULL,
+	ApplicationDate DATETIME NOT NULL,
+	ApplicationFee DECIMAL(10,2) NOT NULL, -- look!
+	ApplicationFeePaid BIT NOT NULL,
+
+	PRIMARY KEY(ID),
+)
+
+CREATE TABLE TestAppointment (
+	ID INT IDENTITY NOT NULL,
+	ApplicationID INT NOT NULL,
+	TestID INT NOT NULL,
+	TestResult NVARCHAR(1) NOT NULL,
+
+	PRIMARY KEY(ID),
+)
+
+CREATE TABLE LicenseDetentions (
+	ID INT IDENTITY NOT NULL,
+	LicenseID INT NOT NULL,
+	ApplicationID INT NOT NULL,
+	DetentionFees DECIMAL(10,2) NOT NULL,
+	DetentionNote NVARCHAR(255),
+
+	PRIMARY KEY(ID),
+)
