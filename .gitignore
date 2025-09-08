@@ -1,0 +1,41 @@
+
+# Build results
+bin/
+obj/
+[Bb]uild/
+[Ll]og/
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Aa][Rr][Mm]*/
+[Aa][Rr][Mm]64/
+
+# Visual Studio cache
+.vs/
+*.user
+*.suo
+*.cache
+*.log
+
+# Rider / ReSharper / VS Code
+.idea/
+.ReSharper*/
+*.DotSettings.user
+.vscode/
+
+# NuGet
+packages/
+*.nupkg
+*.snupkg
+
+# SQL Server local files
+*.mdf
+*.ldf
+*.ndf
+*.bak
+*.trn
+
+# OS junk
+Thumbs.db
+.DS_Store
