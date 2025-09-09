@@ -47,8 +47,8 @@ CREATE TABLE Services (
 CREATE TABLE LicenseClasses (
 	ID INT IDENTITY NOT NULL,
 	LicenseClass NVARCHAR(50) NOT NULL,
-	MinimumAllowedAge SMALLMONEY NOT NULL,
-	ValidityLengthInYears SMALLMONEY NOT NULL,
+	MinimumAllowedAge TINYINT NOT NULL,
+	ValidityLengthInYears TINYINT NOT NULL,
 	ClassFees DECIMAL(10,2) NOT NULL,
 	ClassDescription NVARCHAR(255),
 
@@ -95,8 +95,8 @@ CREATE TABLE Licenses (
 	LicenseClassID INT NOT NULL,
 	LicenseStatusID INT NOT NULL,
 	IssueDate DATETIME NOT NULL,
-	ExpiryDate DATETIME NOT NULL, -- Could be drived by Adding "ValidityLengthInYears" + "IssueDate" = "ExpiryDate", But denormalized for efficincy.
-	LicenseType NVARCHAR(1) NOT NULL,
+	ExpiryDate DATETIME NOT NULL, 
+	LicenseType VARCHAR(1) NOT NULL,
 	LicenseNumber NVARCHAR(50) NOT NULL,
 	LicenseCondition NVARCHAR(255),
 	LicenseNote NVARCHAR(255),
@@ -113,17 +113,19 @@ CREATE TABLE Applications (
 	RequestedLicenseClassID INT,
 	ApplicationNumber NVARCHAR(50) NOT NULL,
 	ApplicationDate DATETIME NOT NULL,
-	ApplicationFee DECIMAL(10,2) NOT NULL, -- look!
+	ApplicationFee DECIMAL(10,2) NOT NULL,
 	ApplicationFeePaid BIT NOT NULL,
 
 	PRIMARY KEY(ID),
 )
 
-CREATE TABLE TestAppointment (
+CREATE TABLE TestAppointments (
 	ID INT IDENTITY NOT NULL,
 	ApplicationID INT NOT NULL,
 	TestID INT NOT NULL,
-	TestResult NVARCHAR(1) NOT NULL,
+	ScheduledDate DATETIME NOT NULL,
+	TakenDate DATETIME,
+	TestResult VARCHAR(1) NOT NULL,
 
 	PRIMARY KEY(ID),
 )
