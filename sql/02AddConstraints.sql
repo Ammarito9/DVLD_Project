@@ -76,9 +76,14 @@ ALTER TABLE Applications ADD CONSTRAINT CK_Applications_ApplicationDate CHECK (A
 ----TestAppointments
 ALTER TABLE TestAppointments ADD CONSTRAINT CK_TestAppointments_ScheduledDate CHECK (ScheduledDate >= GETDATE());
 
-ALTER TABLE TestAppointments ADD CONSTRAINT CK_TestAppointments_TakenDate CHECK (TakenDate <= GETDATE());
+ALTER TABLE TestAppointments ADD CONSTRAINT CK_TestAppointments_TakenDate CHECK ((TakenDate <= GETDATE()) OR TakenDate IS NULL);
 
 ALTER TABLE TestAppointments ADD CONSTRAINT CK_TestAppointments_TestResult CHECK (TestResult IN ('P','F','N'));
+
+ALTER TABLE TestAppointments ADD CONSTRAINT CK_TestAppointments_Score CHECK (Score BETWEEN 0 AND 100);
+
+--LicenseDetentions
+ALTER TABLE LicenseDetentions ADD CONSTRAINT CK_LicenseDetentions_DateOfDetention_ReleaseDate CHECK ((DateOfDetention <= ReleaseDate) OR ReleaseDate IS NULL);
 
 --UNIQUE constraints
 
@@ -130,3 +135,10 @@ ALTER TABLE Tests ADD CONSTRAINT UQ_Tests_TestName UNIQUE (TestName);
 ----TestAppointments
 ALTER TABLE TestAppointments
 ADD CONSTRAINT DF_TestAppointments_TestResult DEFAULT ('N') FOR TestResult;
+
+ALTER TABLE Users
+ADD CONSTRAINT DF_Users_IsActive DEFAULT (1) FOR IsActive;
+
+--Applications
+ALTER TABLE Applications
+ADD CONSTRAINT DF_Applications_ApplicationFeePaid DEFAULT (0) FOR ApplicationFeePaid;

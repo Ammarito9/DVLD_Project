@@ -84,6 +84,8 @@ CREATE TABLE Users (
 	PersonID INT NOT NULL,
 	Username NVARCHAR(50) NOT NULL,
 	Password NVARCHAR(50) NOT NULL,
+	Permissions TINYINT NOT NULL,
+	IsActive BIT NOT NULL,
 
 	PRIMARY KEY(ID),
 )
@@ -125,6 +127,7 @@ CREATE TABLE TestAppointments (
 	TestID INT NOT NULL,
 	ScheduledDate DATETIME NOT NULL,
 	TakenDate DATETIME,
+	Score TINYINT NULL,
 	TestResult VARCHAR(1) NOT NULL,
 
 	PRIMARY KEY(ID),
@@ -135,6 +138,8 @@ CREATE TABLE LicenseDetentions (
 	LicenseID INT NOT NULL,
 	ApplicationID INT NOT NULL,
 	DetentionFees DECIMAL(10,2) NOT NULL,
+	DateOfDetention DATETIME NOT NULL,
+	ReleaseDate DATETIME NULL,
 	DetentionNote NVARCHAR(255),
 
 	PRIMARY KEY(ID),
