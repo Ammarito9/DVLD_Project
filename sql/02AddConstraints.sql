@@ -3,40 +3,67 @@
 
 ----Persons
 ALTER TABLE Persons 
-ADD CONSTRAINT FK_Persons_Nationalities FOREIGN KEY (NationalityID) REFERENCES Nationalities(ID);
+ADD CONSTRAINT FK_Persons_Countries FOREIGN KEY (NationalityCountryID) REFERENCES Countries(ID);
 
+----LocalDrivingLinceseApplications
+ALTER TABLE LocalDrivingLinceseApplications 
+ADD CONSTRAINT FK_LocalDrivingLinceseApplications_LicenseClasses FOREIGN KEY (LicenseClassID) REFERENCES LicenseClasses(ID);
+
+ALTER TABLE LocalDrivingLinceseApplications 
+ADD CONSTRAINT FK_LocalDrivingLinceseApplications_Applications FOREIGN KEY (ApplicationID) REFERENCES Applications(ID);
+
+----InternationalLicenses
+ALTER TABLE InternationalLicenses 
+ADD CONSTRAINT FK_InternationalLicenses_Drivers FOREIGN KEY (DriverID) REFERENCES Drivers(ID);
+
+ALTER TABLE InternationalLicenses 
+ADD CONSTRAINT FK_InternationalLicenses_Applications FOREIGN KEY (ApplicationID) REFERENCES Applications(ID);
+
+ALTER TABLE InternationalLicenses 
+ADD CONSTRAINT FK_InternationalLicenses_Linceses FOREIGN KEY (IssuedUsingLocalLicenseID) REFERENCES Licenses(ID);
+
+ALTER TABLE InternationalLicenses 
+ADD CONSTRAINT FK_InternationalLicenses_Users FOREIGN KEY (CreatedByUserID) REFERENCES Users(ID);
 ----Licenses
 ALTER TABLE Licenses 
-ADD CONSTRAINT FK_Licenses_Drivers FOREIGN KEY (DriverID) REFERENCES Drivers(ID);
+ADD CONSTRAINT FK_Licenses_Applications FOREIGN KEY (ApplicationID) REFERENCES Applications(ID);
 
 ALTER TABLE Licenses 
-ADD CONSTRAINT FK_Licenses_Persons FOREIGN KEY (PersonID) REFERENCES Persons(ID);
+ADD CONSTRAINT FK_Licenses_Drivers FOREIGN KEY (DriverID) REFERENCES Drivers(ID);
 
 ALTER TABLE Licenses 
 ADD CONSTRAINT FK_Licenses_LicenseClasses FOREIGN KEY (LicenseClassID) REFERENCES LicenseClasses(ID);
 
 ALTER TABLE Licenses 
-ADD CONSTRAINT FK_Licenses_LicenseStatuses FOREIGN KEY (LicenseStatusID) REFERENCES LicenseStatuses(ID);
+ADD CONSTRAINT FK_Licenses_Users FOREIGN KEY (CreatedByUserID) REFERENCES Users(ID);
 
 ----Drivers
 ALTER TABLE Drivers 
 ADD CONSTRAINT FK_Drivers_Persons FOREIGN KEY (PersonID) REFERENCES Persons(ID);
 
+ALTER TABLE Drivers 
+ADD CONSTRAINT FK_Drivers_Users FOREIGN KEY (CreatedByUserID) REFERENCES Users(ID);
+
 ----Users
 ALTER TABLE Users 
 ADD CONSTRAINT FK_Users_Persons FOREIGN KEY (PersonID) REFERENCES Persons(ID);
 
-----LicenseDetentions
-ALTER TABLE LicenseDetentions 
-ADD CONSTRAINT FK_LicenseDetentions_Licenses FOREIGN KEY (LicenseID) REFERENCES Licenses(ID);
+ALTER TABLE Users DROP FK_Users_Persons;
 
-ALTER TABLE LicenseDetentions 
-ADD CONSTRAINT FK_LicenseDetentions_Applications FOREIGN KEY (ApplicationID) REFERENCES Applications(ID);
+----DetenedLicenses
+ALTER TABLE DetenedLicenses 
+ADD CONSTRAINT FK_DetenedLicenses_Licenses FOREIGN KEY (LicenseID) REFERENCES Licenses(ID);
+
+ALTER TABLE DetenedLicenses 
+ADD CONSTRAINT FK_DetenedLicenses_Applications FOREIGN KEY (ReleaseApplicationID) REFERENCES Applications(ID);
+
+ALTER TABLE DetenedLicenses 
+ADD CONSTRAINT FK_DetenedLicenses_Users_Create FOREIGN KEY (CreatedByUserID) REFERENCES Users(ID);
+
+ALTER TABLE DetenedLicenses 
+ADD CONSTRAINT FK_DetenedLicenses_Users_Released FOREIGN KEY (ReleasedByUserID) REFERENCES Users(ID);
 
 ----Applications
-ALTER TABLE Applications 
-ADD CONSTRAINT FK_Applications_Licenses FOREIGN KEY (LicenseID) REFERENCES Licenses(ID);
-
 ALTER TABLE Applications 
 ADD CONSTRAINT FK_Applications_Services FOREIGN KEY (ServiceID) REFERENCES Services(ID);
 
@@ -47,28 +74,51 @@ ALTER TABLE Applications
 ADD CONSTRAINT FK_Applications_ApplicationStatuses FOREIGN KEY (ApplicationStatusID) REFERENCES ApplicationStatuses(ID);
 
 ALTER TABLE Applications 
-ADD CONSTRAINT FK_Applications_LicenseClasses FOREIGN KEY (RequestedLicenseClassID) REFERENCES LicenseClasses(ID);
+ADD CONSTRAINT FK_Applications_Users FOREIGN KEY (CreatedByUserID) REFERENCES Users(ID);
+
+----Tests
+ALTER TABLE Tests 
+ADD CONSTRAINT FK_Tests_TestAppointments FOREIGN KEY (TestAppointmentID) REFERENCES TestAppointments(ID);
+
+ALTER TABLE Tests 
+ADD CONSTRAINT FK_Tests_Users FOREIGN KEY (CreatedByUserID) REFERENCES Users(ID);
 
 ----TestAppointments
 ALTER TABLE TestAppointments 
-ADD CONSTRAINT FK_TestAppointments_Tests FOREIGN KEY (TestID) REFERENCES Tests(ID);
+ADD CONSTRAINT FK_TestAppointments_Users FOREIGN KEY (CreatedByUserID) REFERENCES Users(ID);
 
 ALTER TABLE TestAppointments 
-ADD CONSTRAINT FK_TestAppointments_Applications FOREIGN KEY (ApplicationID) REFERENCES Applications(ID);
+ADD CONSTRAINT FK_TestAppointments_TestTypes FOREIGN KEY (TestTypeID) REFERENCES TestTypes(ID);
+
+ALTER TABLE TestAppointments 
+ADD CONSTRAINT FK_TestAppointments_Applications FOREIGN KEY (RetakeTestApplicationID) REFERENCES Applications(ID);
+
+ALTER TABLE TestAppointments 
+ADD CONSTRAINT FK_TestAppointments_LocalDrivingLinceseApplications FOREIGN KEY (LocalDrivingLinceseApplicationID) REFERENCES LocalDrivingLinceseApplications(ID);
 
 --CHECK constraints
 
-----Licenses
-ALTER TABLE Licenses ADD CONSTRAINT CK_Licenses_LicenseType CHECK (LicenseType IN ('I','L'));
+----InternationalLicenses
+ALTER TABLE InternationalLicenses ADD CONSTRAINT CK_InternationalLicenses_IssueDate CHECK (IssueDate < GETDATE());
 
+ALTER TABLE InternationalLicenses ADD CONSTRAINT CK_InternationalLicenses_IssueDate_ExpiryDate CHECK (IssueDate < ExpiryDate);
+
+----Licenses
 ALTER TABLE Licenses ADD CONSTRAINT CK_Licenses_IssueDate CHECK (IssueDate < GETDATE());
 
 ALTER TABLE Licenses ADD CONSTRAINT CK_Licenses_IssueDate_ExpiryDate CHECK (IssueDate < ExpiryDate);
+
+ALTER TABLE Licenses ADD CONSTRAINT CK_Licenses_LicenseIssueReson CHECK (LicenseIssueReson BETWEEN 1 AND 4);
+
+----Drivers
+ALTER TABLE Drivers ADD CONSTRAINT CK_Drivers_CreateDate CHECK (CreateDate >= GETDATE());
 
 ----Persons
 ALTER TABLE Persons ADD CONSTRAINT CK_Persons_DateOfBirth CHECK (DateOfBirth < GETDATE());
 
 ALTER TABLE Persons ADD CONSTRAINT CK_Persons_Email CHECK ((Email LIKE '%_@_%._%') OR (Email IS NULL));
+
+ALTER TABLE Persons ADD CONSTRAINT CK_Persons_Gender CHECK (Gender IN ('M','F'));
 
 ----Applications
 ALTER TABLE Applications ADD CONSTRAINT CK_Applications_ApplicationDate CHECK (ApplicationDate <= GETDATE());
@@ -76,19 +126,16 @@ ALTER TABLE Applications ADD CONSTRAINT CK_Applications_ApplicationDate CHECK (A
 ----TestAppointments
 ALTER TABLE TestAppointments ADD CONSTRAINT CK_TestAppointments_ScheduledDate CHECK (ScheduledDate >= GETDATE());
 
-ALTER TABLE TestAppointments ADD CONSTRAINT CK_TestAppointments_TakenDate CHECK ((TakenDate <= GETDATE()) OR TakenDate IS NULL);
 
-ALTER TABLE TestAppointments ADD CONSTRAINT CK_TestAppointments_TestResult CHECK (TestResult IN ('P','F','N'));
+--DetenedLicenses
+ALTER TABLE DetenedLicenses ADD CONSTRAINT CK_DetenedLicenses_DateOfDetain_ReleaseDate CHECK ((DateOfDetain <= ReleaseDate) OR ReleaseDate IS NULL);
 
-ALTER TABLE TestAppointments ADD CONSTRAINT CK_TestAppointments_Score CHECK (Score BETWEEN 0 AND 100);
+ALTER TABLE DetenedLicenses ADD CONSTRAINT CK_DetenedLicenses_DetainFees CHECK (DetainFees >= 0);
 
---LicenseDetentions
-ALTER TABLE LicenseDetentions ADD CONSTRAINT CK_LicenseDetentions_DateOfDetention_ReleaseDate CHECK ((DateOfDetention <= ReleaseDate) OR ReleaseDate IS NULL);
+----Tests
+ALTER TABLE Tests ADD CONSTRAINT CK_Tests_TestResult CHECK (TestResult IN ('P','F','N'));
 
 --UNIQUE constraints
-
-----LicenseStatuses
-ALTER TABLE LicenseStatuses ADD CONSTRAINT UQ_LicenseStatuses_StatusName UNIQUE (StatusName);
 
 ----Licenses
 ALTER TABLE Licenses ADD CONSTRAINT UQ_Licenses_LicenseNumber UNIQUE (LicenseNumber);
@@ -101,8 +148,8 @@ ALTER TABLE Users ADD CONSTRAINT UQ_Users_PersonID UNIQUE (PersonID);
 
 ALTER TABLE Users ADD CONSTRAINT UQ_Users_Username UNIQUE (Username);
 
-----Nationalities
-ALTER TABLE Nationalities ADD CONSTRAINT UQ_Nationalities_NationalityName UNIQUE (NationalityName);
+----Countries
+ALTER TABLE Countries ADD CONSTRAINT UQ_Countries_CountryName UNIQUE (CountryName);
 
 ----Persons
 ALTER TABLE Persons ADD CONSTRAINT UQ_Persons_PersonalPhotoPath UNIQUE (PersonalPhotoPath);
@@ -110,35 +157,35 @@ ALTER TABLE Persons ADD CONSTRAINT UQ_Persons_PersonalPhotoPath UNIQUE (Personal
 ALTER TABLE Persons ADD CONSTRAINT UQ_Persons_NationalNumber UNIQUE (NationalNumber);
 
 ----LicenseClasses
-ALTER TABLE LicenseClasses ADD CONSTRAINT UQ_LicenseClasses_LicenseClass UNIQUE (LicenseClass);
-
-----LicenseDetentions
-ALTER TABLE LicenseDetentions ADD CONSTRAINT UQ_LicenseDetentions_LicenseID_ApplicationID UNIQUE (LicenseID, ApplicationID);
-
-----Applications
-ALTER TABLE Applications ADD CONSTRAINT UQ_Applications_ApplicationNumber UNIQUE (ApplicationNumber);
+ALTER TABLE LicenseClasses ADD CONSTRAINT UQ_LicenseClasses_ClassName UNIQUE (ClassName);
 
 ----ApplicationStatuses
 ALTER TABLE ApplicationStatuses ADD CONSTRAINT UQ_ApplicationStatuses_StatusName UNIQUE (StatusName);
 
-----TestAppointments
-ALTER TABLE TestAppointments ADD CONSTRAINT UQ_TestAppointments_ApplicationID_TestID UNIQUE (ApplicationID, TestID);
-
 ----Services
 ALTER TABLE Services ADD CONSTRAINT UQ_Services_ServiceName UNIQUE (ServiceName);
 
-----Tests
-ALTER TABLE Tests ADD CONSTRAINT UQ_Tests_TestName UNIQUE (TestName);
+----TestTypes
+ALTER TABLE TestTypes ADD CONSTRAINT UQ_TestTypes_TestTypeName UNIQUE (TestTypeName);
 
 --DEFAULT constraints
 
 ----TestAppointments
 ALTER TABLE TestAppointments
-ADD CONSTRAINT DF_TestAppointments_TestResult DEFAULT ('N') FOR TestResult;
+ADD CONSTRAINT DF_TestAppointments_IsLocked DEFAULT (0) FOR IsLocked;
 
+----Users
 ALTER TABLE Users
 ADD CONSTRAINT DF_Users_IsActive DEFAULT (1) FOR IsActive;
 
---Applications
-ALTER TABLE Applications
-ADD CONSTRAINT DF_Applications_ApplicationFeePaid DEFAULT (0) FOR ApplicationFeePaid;
+--DetenedLicenses
+ALTER TABLE DetenedLicenses
+ADD CONSTRAINT DF_DetenedLicenses_IsReleased DEFAULT (0) FOR IsReleased;
+
+--InternationalLicenses
+ALTER TABLE InternationalLicenses
+ADD CONSTRAINT DF_InternationalLicenses_IsActive DEFAULT (1) FOR IsActive;
+
+--Licenses
+ALTER TABLE Licenses
+ADD CONSTRAINT DF_Licenses_IsActive DEFAULT (1) FOR IsActive;

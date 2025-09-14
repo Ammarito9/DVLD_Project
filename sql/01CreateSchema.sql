@@ -5,17 +5,9 @@ GO
 
 USE DVLD;
 
-CREATE TABLE LicenseStatuses (
+CREATE TABLE Countries (
 	ID INT IDENTITY NOT NULL,
-	StatusName NVARCHAR(50) NOT NULL,
-
-	PRIMARY KEY(ID),
-
-)
-
-CREATE TABLE Nationalities (
-	ID INT IDENTITY NOT NULL,
-	NationalityName NVARCHAR(50) NOT NULL,
+	CountryName NVARCHAR(50) NOT NULL,
 
 	PRIMARY KEY(ID),
 )
@@ -27,15 +19,6 @@ CREATE TABLE ApplicationStatuses (
 	PRIMARY KEY(ID),
 )
 
-CREATE TABLE Tests (
-	ID INT IDENTITY NOT NULL,
-	TestName NVARCHAR(50) NOT NULL,
-	TestFee DECIMAL(10,2) NOT NULL,
-
-	PRIMARY KEY(ID),
-)
-
-
 CREATE TABLE Services (
 	ID INT IDENTITY NOT NULL,
 	ServiceName NVARCHAR(50) NOT NULL,
@@ -46,7 +29,7 @@ CREATE TABLE Services (
 
 CREATE TABLE LicenseClasses (
 	ID INT IDENTITY NOT NULL,
-	LicenseClass NVARCHAR(50) NOT NULL,
+	ClassName NVARCHAR(50) NOT NULL,
 	MinimumAllowedAge TINYINT NOT NULL,
 	ValidityLengthInYears TINYINT NOT NULL,
 	ClassFees DECIMAL(10,2) NOT NULL,
@@ -57,17 +40,18 @@ CREATE TABLE LicenseClasses (
 
 CREATE TABLE Persons (
 	ID INT IDENTITY NOT NULL,
-	NationalityID INT NOT NULL,
+	NationalityCountryID INT NOT NULL,
 	NationalNumber NVARCHAR(50) NOT NULL,
 	FirstName NVARCHAR(50) NOT NULL,
 	SecondName NVARCHAR(50),
 	ThirdName NVARCHAR(50),
 	LastName NVARCHAR(50) NOT NULL,
+	Gender VARCHAR(1) NOT NULL,
 	DateOfBirth DATETIME NOT NULL,
 	Email NVARCHAR(100),
 	Address NVARCHAR(255) NOT NULL,
 	PhoneNumber NVARCHAR(20) NOT NULL,
-	PersonalPhotoPath NVARCHAR(255) NOT NULL,
+	PersonalPhotoPath NVARCHAR(255),
 
 	PRIMARY KEY(ID),
 )
@@ -75,6 +59,8 @@ CREATE TABLE Persons (
 CREATE TABLE Drivers (
 	ID INT IDENTITY NOT NULL,
 	PersonID INT NOT NULL,
+	CreatedByUserID INT NOT NULL,
+	CreateDate DATETIME NOT NULL,
 
 	PRIMARY KEY(ID),
 )
@@ -92,55 +78,99 @@ CREATE TABLE Users (
 
 CREATE TABLE Licenses (
 	ID INT IDENTITY NOT NULL,
+	ApplicationID INT NOT NULL,
 	DriverID INT NOT NULL,
-	PersonID INT NOT NULL,
 	LicenseClassID INT NOT NULL,
-	LicenseStatusID INT NOT NULL,
+	LicenseIssueReson TINYINT NOT NULL, --(1-FirstTime, 2-Renew, 3-Replacement for Damaged, 4- Replacement for Lost.)
+	CreatedByUserID INT NOT NULL,
 	IssueDate DATETIME NOT NULL,
 	ExpiryDate DATETIME NOT NULL, 
-	LicenseType VARCHAR(1) NOT NULL,
+	IsActive BIT NOT NULL,
 	LicenseNumber NVARCHAR(50) NOT NULL,
-	LicenseCondition NVARCHAR(255),
 	LicenseNote NVARCHAR(255),
+
+
+	PRIMARY KEY(ID),
+)
+
+CREATE TABLE InternationalLicenses (
+	ID INT IDENTITY NOT NULL,
+	DriverID INT NOT NULL,
+	ApplicationID INT NOT NULL,
+	IssuedUsingLocalLicenseID INT NOT NULL,
+	CreatedByUserID INT NOT NULL,
+	IssueDate DATETIME NOT NULL,
+	ExpiryDate DATETIME NOT NULL, 
+	IsActive BIT NOT NULL,
+
+
 
 	PRIMARY KEY(ID),
 )
 
 CREATE TABLE Applications (
 	ID INT IDENTITY NOT NULL,
-	ServiceID INT NOT NULL,
 	PersonID INT NOT NULL,
+	ServiceID INT NOT NULL,
 	ApplicationStatusID INT NOT NULL,
-	LicenseID INT,
-	RequestedLicenseClassID INT,
-	ApplicationNumber NVARCHAR(50) NOT NULL,
+	CreatedByUserID INT NOT NULL,
 	ApplicationDate DATETIME NOT NULL,
-	ApplicationFee DECIMAL(10,2) NOT NULL,
-	ApplicationFeePaid BIT NOT NULL,
+	LastStatusDate DATETIME NOT NULL,
+	ApplicationPaidFee DECIMAL(10,2) NOT NULL,
+
+	PRIMARY KEY(ID),
+)
+
+CREATE TABLE Tests (
+	ID INT IDENTITY NOT NULL,
+	TestAppointmentID INT NOT NULL,
+	TestResult VARCHAR(1) NOT NULL,
+	CreatedByUserID INT NOT NULL,
+	Notes NVARCHAR(255) NOT NULL,
+
+	PRIMARY KEY(ID),
+)
+
+CREATE TABLE TestTypes (
+	ID INT IDENTITY NOT NULL,
+	TestTypeName NVARCHAR(50) NOT NULL,
+	TestTypeDescription NVARCHAR(500) NOT NULL,
+	TestFee DECIMAL(10,2) NOT NULL,
 
 	PRIMARY KEY(ID),
 )
 
 CREATE TABLE TestAppointments (
 	ID INT IDENTITY NOT NULL,
-	ApplicationID INT NOT NULL,
-	TestID INT NOT NULL,
+	TestTypeID INT NOT NULL,
+	RetakeTestApplicationID INT,
+	LocalDrivingLinceseApplicationID INT NOT NULL,
+	CreatedByUserID INT NOT NULL,
 	ScheduledDate DATETIME NOT NULL,
-	TakenDate DATETIME,
-	Score TINYINT NULL,
-	TestResult VARCHAR(1) NOT NULL,
+	PaidFee DECIMAL(10,2) NOT NULL,
+	IsLocked BIT NOT NULL,
 
 	PRIMARY KEY(ID),
 )
 
-CREATE TABLE LicenseDetentions (
+CREATE TABLE LocalDrivingLinceseApplications (
+	ID INT IDENTITY NOT NULL,
+	LicenseClassID INT NOT NULL,
+	ApplicationID INT NOT NULL,
+
+	PRIMARY KEY(ID),
+)
+
+CREATE TABLE DetenedLicenses (
 	ID INT IDENTITY NOT NULL,
 	LicenseID INT NOT NULL,
-	ApplicationID INT NOT NULL,
-	DetentionFees DECIMAL(10,2) NOT NULL,
-	DateOfDetention DATETIME NOT NULL,
-	ReleaseDate DATETIME NULL,
-	DetentionNote NVARCHAR(255),
+	ReleaseApplicationID INT,
+	CreatedByUserID INT NOT NULL,
+	ReleasedByUserID INT,
+	DetainFees DECIMAL(10,2) NOT NULL,
+	DateOfDetain DATETIME NOT NULL,
+	ReleaseDate DATETIME,
+	IsReleased BIT NOT NULL,
 
 	PRIMARY KEY(ID),
 )
