@@ -152,8 +152,6 @@ ALTER TABLE Users ADD CONSTRAINT UQ_Users_Username UNIQUE (Username);
 ALTER TABLE Countries ADD CONSTRAINT UQ_Countries_CountryName UNIQUE (CountryName);
 
 ----Persons
-ALTER TABLE Persons ADD CONSTRAINT UQ_Persons_PersonalPhotoPath UNIQUE (PersonalPhotoPath);
-
 ALTER TABLE Persons ADD CONSTRAINT UQ_Persons_NationalNumber UNIQUE (NationalNumber);
 
 ----LicenseClasses

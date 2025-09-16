@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36301.6 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DVLD.UI", "DVLD.UI\DVLD.UI.csproj", "{A778B1A6-F69A-4D97-86E1-FA51C8B02A17}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DVLD.BLL", "DVLD.BLL\DVLD.BLL.csproj", "{CE4BDA00-134C-410C-95D4-86EAC9324574}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DVLD.DAL", "DVLD.DAL\DVLD.DAL.csproj", "{D627813A-882F-470A-B6CB-4BD31512A61C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A778B1A6-F69A-4D97-86E1-FA51C8B02A17}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A778B1A6-F69A-4D97-86E1-FA51C8B02A17}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A778B1A6-F69A-4D97-86E1-FA51C8B02A17}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A778B1A6-F69A-4D97-86E1-FA51C8B02A17}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CE4BDA00-134C-410C-95D4-86EAC9324574}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CE4BDA00-134C-410C-95D4-86EAC9324574}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CE4BDA00-134C-410C-95D4-86EAC9324574}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CE4BDA00-134C-410C-95D4-86EAC9324574}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D627813A-882F-470A-B6CB-4BD31512A61C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D627813A-882F-470A-B6CB-4BD31512A61C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D627813A-882F-470A-B6CB-4BD31512A61C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D627813A-882F-470A-B6CB-4BD31512A61C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {FB35AEA9-6042-4BA3-B8A3-4F244109BA01}
+	EndGlobalSection
+EndGlobal
