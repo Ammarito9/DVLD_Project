@@ -1,12 +1,21 @@
 ﻿using System.Net;
 using System.Reflection;
-using DVLD.DAL;
+using DVLD.DAL.DTO;
+using System.Data;
+using DVLD.DAL.Data;
 
 namespace DVLD.BLL.Entities
 {
     public class Person
     {
-        public int ID { get; set; }
+        private enum Mode
+        {
+            Update,
+            AddNew
+        }
+
+        Mode mode;
+        public int ID { get; private set; }
         public int NationalityCountryID { get; set; }
         public string NationalNumber { get; set; }
         public string FirstName { get; set; }
@@ -22,6 +31,7 @@ namespace DVLD.BLL.Entities
 
         private Person(int iD, int nationalityCountryID, string nationalNumber, string firstName, string secondName, string thirdName, string lastName, string gender, DateTime dateOfBirth, string email, string address, string phoneNumber, string personalPhotoPath)
         {
+            mode = Mode.Update;
             ID = iD;
             NationalityCountryID = nationalityCountryID;
             NationalNumber = nationalNumber;
@@ -36,9 +46,9 @@ namespace DVLD.BLL.Entities
             PhoneNumber = phoneNumber;
             PersonalPhotoPath = personalPhotoPath;
         }
-
         public Person()
         {
+            mode = Mode.AddNew;
             ID = 0;
             NationalityCountryID = 0;
             NationalNumber = string.Empty;
@@ -54,46 +64,128 @@ namespace DVLD.BLL.Entities
             PersonalPhotoPath = string.Empty;
 
         }
+
+        private static string HandleDBNull(object value)
+        {
+            return value == DBNull.Value ? "" : (string)value;
+        }
         public static Person Find(int ID)
         {
-            int nationalityCountryID = 0;
-            string nationalNumber = string.Empty,firstName = string.Empty,lastName = string.Empty,gender = string.Empty,address = string.Empty,phoneNumber = string.Empty;
-            string? secondName = string.Empty, thirdName = string.Empty, email = string.Empty, personalPhotoPath = string.Empty;
-            DateTime dateOfBirth = DateTime.Now;
+            DataTable dt = PersonData.GetByID(ID);
 
-            if (PersonData.GetByID(ID, ref nationalityCountryID, ref nationalNumber, ref firstName, ref secondName, ref thirdName, ref lastName, ref gender, ref dateOfBirth, ref email, ref address, ref phoneNumber, ref personalPhotoPath))
+            if (dt.Rows.Count > 0)
             {
-                //Defaulting the nulls to Empty string
-                secondName = secondName == null ? string.Empty : secondName;
-                thirdName = thirdName == null ? string.Empty : thirdName;
-                email = email == null ? string.Empty : email;
-                personalPhotoPath = personalPhotoPath == null ? string.Empty : personalPhotoPath;
+                DataRow dr = dt.Rows[0];
 
-                return new Person(ID, nationalityCountryID, nationalNumber, firstName, secondName, thirdName, lastName, gender, dateOfBirth, email, address, phoneNumber, personalPhotoPath);
+                return new Person(
+                     ID
+                    ,(int)dr["NationalityCountryID"]
+                    ,(string)dr["NationalNumber"]
+                    ,(string)dr["FirstName"]
+                    ,HandleDBNull(dr["SecondName"])
+                    ,HandleDBNull(dr["ThirdName"])
+                    ,(string)dr["LastName"]
+                    ,(string)dr["Gender"]
+                    ,(DateTime)dr["DateOfBirth"]
+                    ,HandleDBNull(dr["Email"])
+                    ,(string)dr["Address"]
+                    ,(string)dr["PhoneNumber"]
+                    ,HandleDBNull(dr["PersonalPhotoPath"])
+                );
             }
             else
                 return null;
         }
-
         public static Person Find(string NationalNumber)
-        { 
-            int nationalityCountryID = 0, ID = 0;
-            string firstName = string.Empty, lastName = string.Empty, gender = string.Empty, address = string.Empty, phoneNumber = string.Empty;
-            string? secondName = string.Empty, thirdName = string.Empty, email = string.Empty, personalPhotoPath = string.Empty;
-            DateTime dateOfBirth = DateTime.Now;
+        {
+            var person = new Person();
 
-            if (PersonData.GetByNationalNumber(ref ID, ref nationalityCountryID, NationalNumber, ref firstName, ref secondName, ref thirdName, ref lastName, ref gender, ref dateOfBirth, ref email, ref address, ref phoneNumber, ref personalPhotoPath))
+            DataTable dt = PersonData.GetByNationalNumber(NationalNumber);
+
+            if (dt.Rows.Count > 0)
             {
-                //Defaulting the nulls to Empty string
-                secondName = secondName == null ? string.Empty : secondName;
-                thirdName = thirdName == null ? string.Empty : thirdName;
-                email = email == null ? string.Empty : email;
-                personalPhotoPath = personalPhotoPath == null ? string.Empty : personalPhotoPath;
+                DataRow dr = dt.Rows[0];
 
-                return new Person(ID, nationalityCountryID, NationalNumber, firstName, secondName, thirdName, lastName, gender, dateOfBirth, email, address, phoneNumber, personalPhotoPath);
+                return new Person(
+                      (int)dr["ID"]
+                    , (int)dr["NationalityCountryID"]
+                    , NationalNumber
+                    , (string)dr["FirstName"]
+                    , HandleDBNull(dr["SecondName"])
+                    , HandleDBNull(dr["ThirdName"])
+                    , (string)dr["LastName"]
+                    , (string)dr["Gender"]
+                    , (DateTime)dr["DateOfBirth"]
+                    , HandleDBNull(dr["Email"])
+                    , (string)dr["Address"]
+                    , (string)dr["PhoneNumber"]
+                    , HandleDBNull(dr["PersonalPhotoPath"])
+                );
             }
             else
                 return null;
+        }
+        public bool Add()
+        {
+            var personDTO = new PersonDTO();
+
+            personDTO.NationalityCountryID = NationalityCountryID;
+            personDTO.NationalNumber = NationalNumber;
+            personDTO.FirstName = FirstName;
+            personDTO.SecondName = SecondName;
+            personDTO.ThirdName = ThirdName;
+            personDTO.LastName = LastName;
+            personDTO.Gender = Gender;
+            personDTO.DateOfBirth = DateOfBirth;
+            personDTO.Email = Email;
+            personDTO.Address = Address;
+            personDTO.PhoneNumber = PhoneNumber;
+            personDTO.PersonalPhotoPath = PersonalPhotoPath;
+            ID = PersonData.Add(personDTO);
+
+            return (ID != 0);
+        }
+        public bool Update()
+        {
+            if(!PersonData.IsExist(ID)) return false;
+
+            var personDTO = new PersonDTO();
+
+            personDTO.NationalityCountryID = NationalityCountryID;
+            personDTO.NationalNumber = NationalNumber;
+            personDTO.FirstName = FirstName;
+            personDTO.SecondName = SecondName;
+            personDTO.ThirdName = ThirdName;
+            personDTO.LastName = LastName;
+            personDTO.Gender = Gender;
+            personDTO.DateOfBirth = DateOfBirth;
+            personDTO.Email = Email;
+            personDTO.Address = Address;
+            personDTO.PhoneNumber = PhoneNumber;
+            personDTO.PersonalPhotoPath = PersonalPhotoPath;
+
+
+            return (PersonData.Update(personDTO) > 0);
+        }
+        public static bool Delete(int ID) => (PersonData.Delete(ID) > 0);
+        public static DataTable GetAll() => PersonData.GetAll();
+
+        public bool Save()
+        {
+            switch (mode)
+            {
+                case Mode.AddNew:
+                    if (Add())
+                    {
+                        mode = Mode.Update;
+                        return true;
+                    }
+                    return false;
+                case Mode.Update:
+                    return Update();
+
+                default: return false;
+            }
         }
     }
 }

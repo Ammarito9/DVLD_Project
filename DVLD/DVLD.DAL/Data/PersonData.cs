@@ -7,8 +7,9 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Data;
+using DVLD.DAL.DTO;
 
-namespace DVLD.DAL
+namespace DVLD.DAL.Data
 {
     public class PersonData
     {
@@ -16,9 +17,11 @@ namespace DVLD.DAL
         {
             return string.IsNullOrEmpty(value) ? DBNull.Value : value;
         }
-        public static bool GetByID(int iD, ref int nationalityCountryID, ref string nationalNumber, ref string firstName, ref string secondName, ref string thirdName, ref string lastName, ref string gender, ref DateTime dateOfBirth, ref string email, ref string address, ref string phoneNumber, ref string personalPhotoPath)
+        public static DataTable GetByID(int iD)
         {
             using var conn = new SqlConnection(Connection.ConnectionString);
+
+            DataTable dt = new DataTable();
 
             string query = @"SELECT * FROM Persons
                             WHERE ID = @ID;";
@@ -32,23 +35,10 @@ namespace DVLD.DAL
 
                 using var reader = cmd.ExecuteReader();
 
-                if (!reader.Read())
-                    return false;
+                if (reader.HasRows)
+                    dt.Load(reader);
 
-                nationalityCountryID = (int)reader["NationalityCountryID"];
-                nationalNumber = (string)reader["NationalNumber"];
-                firstName = (string)reader["FirstName"];
-                secondName = reader["SecondName"] == DBNull.Value ? null : (string)reader["SecondName"];
-                thirdName = reader["ThirdName"] == DBNull.Value ? null : (string)reader["ThirdName"];
-                lastName = (string)reader["LastName"];
-                gender = (string)reader["Gender"];
-                dateOfBirth = (DateTime)reader["DateOfBirth"];
-                email = reader["Email"] == DBNull.Value ? null : (string)reader["Email"];
-                address = (string)reader["Address"];
-                phoneNumber = (string)reader["PhoneNumber"];
-                personalPhotoPath = reader["PersonalPhotoPath"] == DBNull.Value ? null : (string)reader["PersonalPhotoPath"];
-
-                return true;
+                return dt;
             }
             catch (SqlException ex)
             {
@@ -60,9 +50,11 @@ namespace DVLD.DAL
             }
         }
 
-        public static bool GetByNationalNumber(ref int iD, ref int nationalityCountryID, string nationalNumber, ref string firstName, ref string secondName, ref string thirdName, ref string lastName, ref string gender, ref DateTime dateOfBirth, ref string email, ref string address, ref string phoneNumber, ref string personalPhotoPath)
+        public static DataTable GetByNationalNumber(string nationalNumber)
         {
             using var conn = new SqlConnection(Connection.ConnectionString);
+
+            DataTable dt = new DataTable();
 
             string query = @"SELECT * FROM Persons
                             WHERE NationalNumber = @NationalNumber;";
@@ -76,23 +68,10 @@ namespace DVLD.DAL
 
                 using var reader = cmd.ExecuteReader();
 
-                if (!reader.Read())
-                    return false;
-                
-                iD = (int)reader["ID"];
-                nationalityCountryID = (int)reader["NationalityCountryID"];
-                firstName = (string)reader["FirstName"];
-                secondName = reader["SecondName"] == DBNull.Value ? null : (string)reader["SecondName"];
-                thirdName = reader["ThirdName"] == DBNull.Value ? null : (string)reader["ThirdName"];
-                lastName = (string)reader["LastName"];
-                gender = (string)reader["Gender"];
-                dateOfBirth = (DateTime)reader["DateOfBirth"];
-                email = reader["Email"] == DBNull.Value ? null : (string)reader["Email"];
-                address = (string)reader["Address"];
-                phoneNumber = (string)reader["PhoneNumber"];
-                personalPhotoPath = reader["PersonalPhotoPath"] == DBNull.Value ? null : (string)reader["PersonalPhotoPath"];
+                if (reader.HasRows)
+                    dt.Load(reader);
 
-                return true;
+                return dt;
             }
             catch (SqlException ex)
             {
@@ -105,7 +84,7 @@ namespace DVLD.DAL
         }
 
         //Returns the newly created ID
-        public static int Add(int nationalityCountryID, string nationalNumber, string firstName, string secondName, string thirdName, string lastName, string gender, DateTime dateOfBirth, string email, string address, string phoneNumber, string personalPhotoPath)
+        public static int Add(PersonDTO person)
         {
             using var conn = new SqlConnection(Connection.ConnectionString);
 
@@ -116,18 +95,18 @@ namespace DVLD.DAL
                             SELECT SCOPE_IDENTITY();";
 
             using var cmd = new SqlCommand(query, conn);
-            cmd.Parameters.AddWithValue("@NationalityCountryID", nationalityCountryID);
-            cmd.Parameters.AddWithValue("@NationalNumber", nationalNumber);
-            cmd.Parameters.AddWithValue("@FirstName", firstName);
-            cmd.Parameters.AddWithValue("@SecondName", HandleNull(secondName));
-            cmd.Parameters.AddWithValue("@ThirdName", HandleNull(thirdName));
-            cmd.Parameters.AddWithValue("@LastName", lastName);
-            cmd.Parameters.AddWithValue("@Address", address);
-            cmd.Parameters.AddWithValue("@DateOfBirth", dateOfBirth);
-            cmd.Parameters.AddWithValue("@Email", HandleNull(email));
-            cmd.Parameters.AddWithValue("@Gender", gender);
-            cmd.Parameters.AddWithValue("@PhoneNumber", phoneNumber);
-            cmd.Parameters.AddWithValue("@PersonalPhotoPath", HandleNull(personalPhotoPath));
+            cmd.Parameters.AddWithValue("@NationalityCountryID", person.NationalityCountryID);
+            cmd.Parameters.AddWithValue("@NationalNumber", person.NationalNumber);
+            cmd.Parameters.AddWithValue("@FirstName", person.FirstName);
+            cmd.Parameters.AddWithValue("@SecondName", HandleNull(person.SecondName));
+            cmd.Parameters.AddWithValue("@ThirdName", HandleNull(person.ThirdName));
+            cmd.Parameters.AddWithValue("@LastName", person.LastName);
+            cmd.Parameters.AddWithValue("@Address", person.Address);
+            cmd.Parameters.AddWithValue("@DateOfBirth", person.DateOfBirth);
+            cmd.Parameters.AddWithValue("@Email", HandleNull(person.Email));
+            cmd.Parameters.AddWithValue("@Gender", person.Gender);
+            cmd.Parameters.AddWithValue("@PhoneNumber", person.PhoneNumber);
+            cmd.Parameters.AddWithValue("@PersonalPhotoPath", HandleNull(person.PersonalPhotoPath));
 
             try
             {
@@ -150,7 +129,7 @@ namespace DVLD.DAL
             }
         }
         //Returns the number of rows effected!
-        public static int Update(int iD, int nationalityCountryID, string nationalNumber, string firstName, string secondName, string thirdName, string lastName, string gender, DateTime dateOfBirth, string email, string address, string phoneNumber, string personalPhotoPath)
+        public static int Update(PersonDTO person)
         {
             using var conn = new SqlConnection(Connection.ConnectionString);
 
@@ -171,19 +150,19 @@ namespace DVLD.DAL
                             WHERE ID = @ID;";
 
             using var cmd = new SqlCommand(query, conn);
-            cmd.Parameters.AddWithValue("@ID", iD);
-            cmd.Parameters.AddWithValue("@NationalityCountryID", nationalityCountryID);
-            cmd.Parameters.AddWithValue("@NationalNumber", nationalNumber);
-            cmd.Parameters.AddWithValue("@FirstName", firstName);
-            cmd.Parameters.AddWithValue("@SecondName", HandleNull(secondName));
-            cmd.Parameters.AddWithValue("@ThirdName", HandleNull(thirdName));
-            cmd.Parameters.AddWithValue("@LastName", lastName);
-            cmd.Parameters.AddWithValue("@Address", address);
-            cmd.Parameters.AddWithValue("@DateOfBirth", dateOfBirth);
-            cmd.Parameters.AddWithValue("@Email", HandleNull(email));
-            cmd.Parameters.AddWithValue("@Gender", gender);
-            cmd.Parameters.AddWithValue("@PhoneNumber", phoneNumber);
-            cmd.Parameters.AddWithValue("@PersonalPhotoPath", HandleNull(personalPhotoPath));
+            cmd.Parameters.AddWithValue("@ID", person.ID);
+            cmd.Parameters.AddWithValue("@NationalityCountryID", person.NationalityCountryID);
+            cmd.Parameters.AddWithValue("@NationalNumber", person.NationalNumber);
+            cmd.Parameters.AddWithValue("@FirstName", person.FirstName);
+            cmd.Parameters.AddWithValue("@SecondName", HandleNull(person.SecondName));
+            cmd.Parameters.AddWithValue("@ThirdName", HandleNull(person.ThirdName));
+            cmd.Parameters.AddWithValue("@LastName", person.LastName);
+            cmd.Parameters.AddWithValue("@Address", person.Address);
+            cmd.Parameters.AddWithValue("@DateOfBirth", person.DateOfBirth);
+            cmd.Parameters.AddWithValue("@Email", HandleNull(person.Email));
+            cmd.Parameters.AddWithValue("@Gender", person.Gender);
+            cmd.Parameters.AddWithValue("@PhoneNumber", person.PhoneNumber);
+            cmd.Parameters.AddWithValue("@PersonalPhotoPath", HandleNull(person.PersonalPhotoPath));
 
             try
             {
