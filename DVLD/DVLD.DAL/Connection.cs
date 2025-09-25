@@ -1,4 +1,6 @@
-﻿namespace DVLD.DAL
+﻿using System.Data;
+
+namespace DVLD.DAL
 {
     static class Connection
     {

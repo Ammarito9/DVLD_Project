@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Data;
+using DVLD.DAL.Data;
+using DVLD.DAL.DTO;
 
 namespace DVLD.BLL.Entities
 {
@@ -33,6 +36,59 @@ namespace DVLD.BLL.Entities
             CountryName = string.Empty;
         }
 
+        private static string HandleDBNull(object value)
+        {
+            return value == DBNull.Value ? "" : (string)value;
+        }
 
+        public static Country Find(int ID)
+        {
+            DataTable dt = CountryData.GetByID(ID);
+
+            if (dt == null || dt.Rows.Count == 0)
+                return null;
+
+            DataRow dr = dt.Rows[0];
+            return new Country((int)dr["ID"], (string)dr["CountryName"]);
+        }
+
+        private bool Add()
+        {
+            var countryDTO = new CountryDTO(CountryName);
+            ID = CountryData.Add(countryDTO);
+
+            return (ID != 0);
+        }
+
+        private bool Update()
+        {
+            if(!CountryData.IsExist(ID)) return false;
+
+            var countryDTO = new CountryDTO(ID, CountryName);
+            int rows = CountryData.Update(countryDTO);
+
+            return (rows > 0);
+        }
+        public static bool Delete(int ID) => (CountryData.Delete(ID) > 0);
+        public static DataTable GetAll() => CountryData.GetAll();
+
+        public bool Save()
+        {
+            switch (mode)
+            {
+                case Mode.AddNew:
+                {
+                    if(!Add())
+                        return false;
+
+                    mode = Mode.Update;
+                    return true;
+                }
+                case Mode.Update:
+                    return Update();
+
+                default: return false;
+            }
+        }
     }
 }

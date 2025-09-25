@@ -6,9 +6,19 @@ using System.Threading.Tasks;
 
 namespace DVLD.DAL.DTO
 {
-    internal class CountryDTO
+    public class CountryDTO
     {
         public int ID { get; private set; }
         public string CountryName { get; set; }
+
+        public CountryDTO(string CountryName)
+        {
+            this.CountryName = CountryName;
+        }
+        public CountryDTO(int ID, string CountryName)
+        {
+            this.ID = ID;
+            this.CountryName = CountryName;
+        }
     }
 }

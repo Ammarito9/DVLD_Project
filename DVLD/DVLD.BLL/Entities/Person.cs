@@ -14,7 +14,7 @@ namespace DVLD.BLL.Entities
             AddNew
         }
 
-        Mode mode;
+        private Mode mode;
         public int ID { get; private set; }
         public int NationalityCountryID { get; set; }
         public string NationalNumber { get; set; }
@@ -125,7 +125,7 @@ namespace DVLD.BLL.Entities
             else
                 return null;
         }
-        public bool Add()
+        private bool Add()
         {
             var personDTO = new PersonDTO();
 
@@ -145,7 +145,7 @@ namespace DVLD.BLL.Entities
 
             return (ID != 0);
         }
-        public bool Update()
+        private bool Update()
         {
             if(!PersonData.IsExist(ID)) return false;
 
