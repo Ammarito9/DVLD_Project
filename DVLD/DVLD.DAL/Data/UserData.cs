@@ -46,6 +46,37 @@ namespace DVLD.DAL.Data
                 throw new Exception("Error Occurred in DAL!", ex);
             }
         }
+        public static DataTable GetByUsername(string Username)
+        {
+            using var conn = new SqlConnection(Connection.ConnectionString);
+
+            string query = @"SELECT * FROM Users WHERE Username = @Username;";
+
+            using var cmd = new SqlCommand(query, conn);
+            cmd.Parameters.AddWithValue("@Username", Username);
+
+            try
+            {
+                conn.Open();
+
+                var dt = new DataTable();
+
+                using var reader = cmd.ExecuteReader(CommandBehavior.SingleRow);
+
+                if (reader.HasRows)
+                    dt.Load(reader);
+
+                return dt;
+            }
+            catch (SqlException ex)
+            {
+                throw new Exception("Error Occurred from the database!", ex);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error Occurred in DAL!", ex);
+            }
+        }
 
         public static int Add(UserDTO user)
         {

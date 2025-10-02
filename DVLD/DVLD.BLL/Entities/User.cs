@@ -10,8 +10,10 @@ using System.Data;
 
 namespace DVLD.BLL.Entities
 {
-    internal class User
+    public class User
     {
+        private static readonly string PathOfRememberMeFile = @"D:\programming\programmingAdvices\Programming advices trining Code\DVLD_PROJECT\rememberme.txt";
+
         private enum Mode
         {
             Update,
@@ -58,7 +60,16 @@ namespace DVLD.BLL.Entities
             DataRow dr = dt.Rows[0];
             return new User((int)dr["ID"], (int)dr["PersonID"], (string)dr["UserName"], (string)dr["Password"], (int)dr["Permissions"], (bool)dr["IsActive"]);
         }
+        public static User Find(string Username)
+        {
+            DataTable dt = UserData.GetByUsername(Username);
 
+            if (dt == null || dt.Rows.Count == 0)
+                return null;
+
+            DataRow dr = dt.Rows[0];
+            return new User((int)dr["ID"], (int)dr["PersonID"], (string)dr["UserName"], (string)dr["Password"], (byte)dr["Permissions"], (bool)dr["IsActive"]);
+        }
         private bool Add()
         {
             var UserDTO = new UserDTO(UserName, Person.ID, Password,IsActive);
@@ -94,6 +105,35 @@ namespace DVLD.BLL.Entities
                     return false;
                 default : return false;
             }
+        }
+        public static User CheckCredentials(string username, string password)
+        {
+            User user = new User();
+            user = Find(username);
+
+            if (user == null) return null;
+            if (user.IsActive == false) return null;
+            if (user.Password != password) return null;
+
+            return user;
+        }
+        public static void AddCredentialsToRememberMe(string UserName) => FileDataAccess.WriteToFile(PathOfRememberMeFile, UserName);
+
+        public static User GetCredentialsFromRememberMe()
+        {
+            List<string> ls = FileDataAccess.ReadFromFile(PathOfRememberMeFile);
+
+            if (ls.Count == 0)
+                return null;
+
+            string RememberMeLine = ls.First();
+
+            if (RememberMeLine != string.Empty)
+            {
+                return User.Find(RememberMeLine);
+            }
+
+            return null;
         }
     }
 }

@@ -1,3 +1,15 @@
+USE DVLD;
+
+GO 
+
+INSERT INTO Persons (FirstName,LastName,NationalityCountryID,Address,DateOfBirth,Gender,Email,NationalNumber,PhoneNumber)
+VALUES
+('Ammar','Albaghajati',170, 'Damascus 123 street', 22-09-2004,'M','ammaralbaghajati@gmail.com','123',05348406276);
+
+INSERT INTO Users (PersonID, Username, Password, IsActive, Permissions)
+VALUES
+(1,'ammar','198086',1,0);
+
 INSERT INTO Services (ServiceName, ServiceFee)
 VALUES 
 ('First-time driving license issuance',15),
