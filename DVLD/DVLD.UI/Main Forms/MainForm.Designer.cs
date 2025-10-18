@@ -60,6 +60,7 @@
             peopleToolStripMenuItem.Name = "peopleToolStripMenuItem";
             peopleToolStripMenuItem.Size = new Size(129, 44);
             peopleToolStripMenuItem.Text = "People";
+            peopleToolStripMenuItem.Click += peopleToolStripMenuItem_Click;
             // 
             // driversToolStripMenuItem
             // 

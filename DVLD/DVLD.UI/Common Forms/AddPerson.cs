@@ -8,19 +8,18 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace DVLD.UI.Main_Forms
+namespace DVLD.UI.Common_Forms
 {
-    public partial class MainForm : Form
+    public partial class AddPerson : Form
     {
-        public MainForm()
+        public AddPerson()
         {
             InitializeComponent();
         }
 
-        private void peopleToolStripMenuItem_Click(object sender, EventArgs e)
+        private void btnClose_Click(object sender, EventArgs e)
         {
-            ManagePeople mp = new ManagePeople();
-            mp.ShowDialog();
+            this.Close();
         }
     }
 }

@@ -241,6 +241,54 @@ namespace DVLD.DAL.Data
             }
         }
 
+        public enum FilterBy 
+        { 
+            None = 0,
+            ID,
+            NationalNumber,
+            Country,
+            FirstName,
+            SecondName,
+            ThirdName,
+            LastName,
+            Gender,
+            Email,
+            Address,
+            PhoneNumber,
+        }
+        public static DataTable GetAllFilterBy(FilterBy filter,string filterBy)
+        {
+            using var conn = new SqlConnection(Connection.ConnectionString);
+
+            DataTable dt = new DataTable();
+
+            string query = @$"SELECT * FROM Persons
+                            WHERE {filter.ToString()} = @filterBy;";
+
+            using var cmd = new SqlCommand(query, conn);
+            cmd.Parameters.AddWithValue("@filterBy", filterBy);
+            try
+            {
+                conn.Open();
+
+                using var reader = cmd.ExecuteReader();
+                if (reader.HasRows)
+                {
+                    dt.Load(reader);
+                }
+
+                return dt;
+            }
+            catch (SqlException ex)
+            {
+                throw new Exception("Error Occurred from the database!", ex);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error Occurred in DAL!", ex);
+            }
+        }
+
         public static bool IsExist(int iD)
         {
             using var conn = new SqlConnection(Connection.ConnectionString);
@@ -250,6 +298,34 @@ namespace DVLD.DAL.Data
 
             using var cmd = new SqlCommand(query, conn);
             cmd.Parameters.AddWithValue("@ID", iD);
+
+            try
+            {
+                conn.Open();
+
+                object result = cmd.ExecuteScalar();
+
+                return result != null;
+            }
+            catch (SqlException ex)
+            {
+                throw new Exception("Error Occurred from the database!", ex);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error Occurred in DAL!", ex);
+            }
+        }
+
+        public static bool IsExist(string NationalNumber)
+        {
+            using var conn = new SqlConnection(Connection.ConnectionString);
+
+            string query = @"SELECT 1 FROM Persons
+                            WHERE NationalNumber = @NationalNumber;";
+
+            using var cmd = new SqlCommand(query, conn);
+            cmd.Parameters.AddWithValue("@NationalNumber", NationalNumber);
 
             try
             {

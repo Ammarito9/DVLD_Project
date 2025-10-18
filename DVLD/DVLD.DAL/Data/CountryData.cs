@@ -18,13 +18,44 @@ namespace DVLD.DAL.Data
 
         public static DataTable GetByID(int iD)
         {
-            using var conn = new SqlConnection();
+            using var conn = new SqlConnection(Connection.ConnectionString);
 
             string query = @"SELECT * FROM Countries
                             WHERE ID = @ID";
 
             using var cmd = new SqlCommand(query, conn);
             cmd.Parameters.AddWithValue("@ID", iD);
+
+            DataTable dt = new DataTable();
+            try
+            {
+                conn.Open();
+
+                using var reader = cmd.ExecuteReader();
+
+                if (reader.HasRows)
+                    dt.Load(reader);
+
+                return dt;
+            }
+            catch (SqlException ex)
+            {
+                throw new Exception("Error Occurred from the database!", ex);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error Occurred in DAL!", ex);
+            }
+        }
+        public static DataTable GetByCountryName(string CountryName)
+        {
+            using var conn = new SqlConnection(Connection.ConnectionString);
+
+            string query = @"SELECT * FROM Countries
+                            WHERE CountryName = @CountryName";
+
+            using var cmd = new SqlCommand(query, conn);
+            cmd.Parameters.AddWithValue("@CountryName", CountryName);
 
             DataTable dt = new DataTable();
             try
@@ -159,6 +190,37 @@ namespace DVLD.DAL.Data
                     dt.Load(reader);
 
                 return dt;
+            }
+            catch (SqlException ex)
+            {
+                throw new Exception("Error Occurred from the database!", ex);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error Occurred in DAL!", ex);
+            }
+        }
+
+        public static List<string> GetAllCountryNames()
+        {
+            using var conn = new SqlConnection(Connection.ConnectionString);
+
+            string query = @"SELECT CountryName FROM Countries;";
+
+            using var cmd = new SqlCommand(query, conn);
+
+            try
+            {
+                conn.Open();
+
+                List<string> CountryNames = new List<string>();
+
+                using var reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                    CountryNames.Add(reader.GetString(0));
+
+                return CountryNames;
             }
             catch (SqlException ex)
             {

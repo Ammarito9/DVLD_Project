@@ -169,7 +169,8 @@ namespace DVLD.BLL.Entities
         }
         public static bool Delete(int ID) => (PersonData.Delete(ID) > 0);
         public static DataTable GetAll() => PersonData.GetAll();
-
+        public static bool IsExists(int ID) => PersonData.IsExist(ID);
+        public static bool IsExists(string NationalNumber) => PersonData.IsExist(NationalNumber);
         public bool Save()
         {
             switch (mode)

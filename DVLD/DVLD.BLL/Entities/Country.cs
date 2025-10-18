@@ -9,7 +9,7 @@ using DVLD.DAL.DTO;
 
 namespace DVLD.BLL.Entities
 {
-    internal class Country
+    public class Country
     {
         private enum Mode
         {
@@ -52,6 +52,17 @@ namespace DVLD.BLL.Entities
             return new Country((int)dr["ID"], (string)dr["CountryName"]);
         }
 
+        public static Country Find(string CountryName)
+        {
+            DataTable dt = CountryData.GetByCountryName(CountryName);
+
+            if (dt == null || dt.Rows.Count == 0)
+                return null;
+
+            DataRow dr = dt.Rows[0];
+            return new Country((int)dr["ID"], (string)dr["CountryName"]);
+        }
+
         private bool Add()
         {
             var countryDTO = new CountryDTO(CountryName);
@@ -72,6 +83,7 @@ namespace DVLD.BLL.Entities
         public static bool Delete(int ID) => (CountryData.Delete(ID) > 0);
         public static DataTable GetAll() => CountryData.GetAll();
 
+        public static List<string> GetAllCountryNames() => CountryData.GetAllCountryNames();
         public bool Save()
         {
             switch (mode)
