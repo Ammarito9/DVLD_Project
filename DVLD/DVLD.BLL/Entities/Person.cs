@@ -29,6 +29,8 @@ namespace DVLD.BLL.Entities
         public string PhoneNumber { get; set; }
         public string PersonalPhotoPath { get; set; }
 
+        public string Nationality { get; }
+
         private Person(int iD, int nationalityCountryID, string nationalNumber, string firstName, string secondName, string thirdName, string lastName, string gender, DateTime dateOfBirth, string email, string address, string phoneNumber, string personalPhotoPath)
         {
             mode = Mode.Update;
@@ -65,6 +67,11 @@ namespace DVLD.BLL.Entities
 
         }
 
+        public string GetFullName()
+        {
+            return string.Join(" ", new[] { FirstName, SecondName, ThirdName, LastName }.Where(name => !string.IsNullOrEmpty(name)));
+        }
+        public string GetPersonNationalityNameByID(int ID) => PersonData.GetPersonNationalityNameByID(ID);
         private static string HandleDBNull(object value)
         {
             return value == DBNull.Value ? "" : (string)value;
@@ -169,6 +176,23 @@ namespace DVLD.BLL.Entities
         }
         public static bool Delete(int ID) => (PersonData.Delete(ID) > 0);
         public static DataTable GetAll() => PersonData.GetAll();
+        public enum FilterBy
+        {
+            None = 0,
+            ID,
+            NationalNumber,
+            Country,
+            FirstName,
+            SecondName,
+            ThirdName,
+            LastName,
+            Gender,
+            Email,
+            Address,
+            PhoneNumber,
+        }
+        public static DataTable GetAllFilterBy(FilterBy filter, string filterBy, bool isLikeStatement = false) => PersonData.GetAllFilterBy(filter.ToString(), filterBy,  isLikeStatement);
+
         public static bool IsExists(int ID) => PersonData.IsExist(ID);
         public static bool IsExists(string NationalNumber) => PersonData.IsExist(NationalNumber);
         public bool Save()

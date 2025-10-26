@@ -50,6 +50,38 @@ namespace DVLD.DAL.Data
             }
         }
 
+        public static string GetPersonNationalityNameByID(int ID)
+        {
+            using var conn = new SqlConnection(Connection.ConnectionString);
+
+
+            string query = @"SELECT c.CountryName FROM Persons p
+                            JOIN Countries c ON p.NationalityCountryID = c.ID
+                            WHERE p.ID = @ID;";
+
+            using var cmd = new SqlCommand(query, conn);
+            cmd.Parameters.AddWithValue("@ID", ID);
+
+            try
+            {
+                conn.Open();
+
+                object NationalityName = cmd.ExecuteScalar();
+
+                if (NationalityName != null)
+                    return Convert.ToString(NationalityName);
+
+                return "";
+            }
+            catch (SqlException ex)
+            {
+                throw new Exception("Error Occurred from the database!", ex);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error Occurred in DAL!", ex);
+            }
+        }
         public static DataTable GetByNationalNumber(string nationalNumber)
         {
             using var conn = new SqlConnection(Connection.ConnectionString);
@@ -216,7 +248,8 @@ namespace DVLD.DAL.Data
 
             DataTable dt = new DataTable();
 
-            string query = @"SELECT * FROM Persons;";
+            string query = @"SELECT p.ID, p.NationalNumber, p.FirstName, p.SecondName, p.ThirdName, p.LastName,c.CountryName , p.Gender, p.DateOfBirth, p.Email, p.Address, p.PhoneNumber  FROM Persons p
+                            JOIN Countries c ON p.NationalityCountryID = c.ID;";
 
             using var cmd = new SqlCommand(query, conn);
             try
@@ -241,29 +274,26 @@ namespace DVLD.DAL.Data
             }
         }
 
-        public enum FilterBy 
-        { 
-            None = 0,
-            ID,
-            NationalNumber,
-            Country,
-            FirstName,
-            SecondName,
-            ThirdName,
-            LastName,
-            Gender,
-            Email,
-            Address,
-            PhoneNumber,
-        }
-        public static DataTable GetAllFilterBy(FilterBy filter,string filterBy)
+
+        public static DataTable GetAllFilterBy(string filter,string filterBy, bool isLikeStatement)
         {
             using var conn = new SqlConnection(Connection.ConnectionString);
 
             DataTable dt = new DataTable();
 
-            string query = @$"SELECT * FROM Persons
-                            WHERE {filter.ToString()} = @filterBy;";
+            string query;
+
+            if (filter == "Country") filter = "c.CountryName";
+            else filter = "p." + filter;
+
+            if (isLikeStatement)
+                query = @$"SELECT p.ID, p.NationalNumber, p.FirstName, p.SecondName, p.ThirdName, p.LastName,c.CountryName , p.Gender, p.DateOfBirth, p.Email, p.Address, p.PhoneNumber  FROM Persons p
+                            JOIN Countries c ON p.NationalityCountryID = c.ID
+                            WHERE {filter} LIKE '%' + @filterBy + '%';";
+            else
+                query = @$"SELECT p.ID, p.NationalNumber, p.FirstName, p.SecondName, p.ThirdName, p.LastName,c.CountryName , p.Gender, p.DateOfBirth, p.Email, p.Address, p.PhoneNumber  FROM Persons p
+                            JOIN Countries c ON p.NationalityCountryID = c.ID
+                            WHERE {filter} = @filterBy";
 
             using var cmd = new SqlCommand(query, conn);
             cmd.Parameters.AddWithValue("@filterBy", filterBy);
