@@ -30,7 +30,6 @@
         {
             lblCardTitle = new Label();
             groupBox1 = new GroupBox();
-            btnClose = new Button();
             llblEditPersonInfo = new LinkLabel();
             lblPersonIdValue = new Label();
             lblCountryValue = new Label();
@@ -85,7 +84,6 @@
             // 
             // groupBox1
             // 
-            groupBox1.Controls.Add(btnClose);
             groupBox1.Controls.Add(llblEditPersonInfo);
             groupBox1.Controls.Add(lblPersonIdValue);
             groupBox1.Controls.Add(lblCountryValue);
@@ -121,16 +119,6 @@
             groupBox1.TabIndex = 62;
             groupBox1.TabStop = false;
             // 
-            // btnClose
-            // 
-            btnClose.Location = new Point(783, 290);
-            btnClose.Name = "btnClose";
-            btnClose.Size = new Size(94, 29);
-            btnClose.TabIndex = 91;
-            btnClose.Text = "Close";
-            btnClose.UseVisualStyleBackColor = true;
-            btnClose.Click += this.btnClose_Click;
-            // 
             // llblEditPersonInfo
             // 
             llblEditPersonInfo.AutoSize = true;
@@ -140,6 +128,7 @@
             llblEditPersonInfo.TabIndex = 90;
             llblEditPersonInfo.TabStop = true;
             llblEditPersonInfo.Text = "Edit Person Info";
+            llblEditPersonInfo.LinkClicked += llblEditPersonInfo_LinkClicked;
             // 
             // lblPersonIdValue
             // 
@@ -458,7 +447,6 @@
         #endregion
         private Label lblCardTitle;
         private GroupBox groupBox1;
-        private Button btnClose;
         private LinkLabel llblEditPersonInfo;
         private Label lblPersonIdValue;
         private Label lblCountryValue;

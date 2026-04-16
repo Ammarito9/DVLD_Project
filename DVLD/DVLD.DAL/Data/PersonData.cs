@@ -347,15 +347,28 @@ namespace DVLD.DAL.Data
             }
         }
 
-        public static bool IsExist(string NationalNumber)
+        public static bool IsExist(string NationalNumber, int IdForUpdate)
         {
             using var conn = new SqlConnection(Connection.ConnectionString);
 
-            string query = @"SELECT 1 FROM Persons
-                            WHERE NationalNumber = @NationalNumber;";
+            string query = "";
+
+            if (IdForUpdate != 0)
+            {
+                query = @"SELECT 1 FROM Persons
+                                WHERE NationalNumber = @NationalNumber AND Id != @Id;";
+            }
+            else
+            {
+                query = @"SELECT 1 FROM Persons
+                                WHERE NationalNumber = @NationalNumber;";
+            }
 
             using var cmd = new SqlCommand(query, conn);
             cmd.Parameters.AddWithValue("@NationalNumber", NationalNumber);
+
+            if (IdForUpdate != 0)  
+                cmd.Parameters.AddWithValue("@Id", IdForUpdate);
 
             try
             {

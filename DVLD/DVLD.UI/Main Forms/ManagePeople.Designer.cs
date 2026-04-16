@@ -136,12 +136,14 @@
             miEdit.Name = "miEdit";
             miEdit.Size = new Size(186, 24);
             miEdit.Text = "Edit";
+            miEdit.Click += miEdit_Click;
             // 
             // miDelete
             // 
             miDelete.Name = "miDelete";
             miDelete.Size = new Size(186, 24);
             miDelete.Text = "Delete";
+            miDelete.Click += miDelete_Click;
             // 
             // toolStripSeparator2
             // 
@@ -250,7 +252,7 @@
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.ButtonFace;
-            ClientSize = new Size(1408, 549);
+            ClientSize = new Size(1400, 541);
             ControlBox = false;
             Controls.Add(rbFilterByFemale);
             Controls.Add(rbFilterByMale);

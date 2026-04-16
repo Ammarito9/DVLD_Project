@@ -158,6 +158,7 @@ namespace DVLD.BLL.Entities
 
             var personDTO = new PersonDTO();
 
+            personDTO.ID = ID;
             personDTO.NationalityCountryID = NationalityCountryID;
             personDTO.NationalNumber = NationalNumber;
             personDTO.FirstName = FirstName;
@@ -194,7 +195,7 @@ namespace DVLD.BLL.Entities
         public static DataTable GetAllFilterBy(FilterBy filter, string filterBy, bool isLikeStatement = false) => PersonData.GetAllFilterBy(filter.ToString(), filterBy,  isLikeStatement);
 
         public static bool IsExists(int ID) => PersonData.IsExist(ID);
-        public static bool IsExists(string NationalNumber) => PersonData.IsExist(NationalNumber);
+        public static bool IsExists(string NationalNumber, int IdForUpdate = 0) => PersonData.IsExist(NationalNumber, IdForUpdate);
         public bool Save()
         {
             switch (mode)

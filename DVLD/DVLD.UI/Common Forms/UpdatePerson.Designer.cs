@@ -1,6 +1,6 @@
 ﻿namespace DVLD.UI.Common_Forms
 {
-    partial class PersonDetails
+    partial class UpdatePerson
     {
         /// <summary>
         /// Required designer variable.
@@ -33,31 +33,32 @@
             // 
             // btnClose
             // 
-            btnClose.Location = new Point(776, 431);
+            btnClose.Location = new Point(804, 443);
             btnClose.Name = "btnClose";
             btnClose.Size = new Size(94, 29);
-            btnClose.TabIndex = 92;
+            btnClose.TabIndex = 3;
             btnClose.Text = "Close";
             btnClose.UseVisualStyleBackColor = true;
             btnClose.Click += btnClose_Click;
             // 
-            // PersonDetails
+            // UpdatePerson
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(882, 472);
+            ClientSize = new Size(937, 505);
             ControlBox = false;
             Controls.Add(btnClose);
             MaximizeBox = false;
+            MdiChildrenMinimizedAnchorBottom = false;
             MinimizeBox = false;
-            Name = "PersonDetails";
-            Text = "PersonDetails";
+            Name = "UpdatePerson";
+            Text = "Update Person";
             ResumeLayout(false);
         }
 
         #endregion
 
-        private ucPersonDetails ucPersonDetails1;
+        private ucAddUpdatePerson ucAddUpdatePerson1;
         private Button btnClose;
     }
 }

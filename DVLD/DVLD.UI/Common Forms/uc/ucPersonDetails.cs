@@ -13,9 +13,11 @@ namespace DVLD.UI.Common_Forms
 {
     public partial class ucPersonDetails : UserControl
     {
+        private int Id;
         private Person temp_person;
         public ucPersonDetails(int ID)
         {
+            Id = ID;
             InitializeComponent();
             temp_person = Person.Find(ID);
             LoadPersonDetails();
@@ -42,6 +44,12 @@ namespace DVLD.UI.Common_Forms
                 lblCountryValue.Text = temp_person.GetPersonNationalityNameByID(temp_person.ID);
                 pbPersonImage.ImageLocation = temp_person.PersonalPhotoPath;
             }
+        }
+
+        private void llblEditPersonInfo_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            UpdatePerson updatePerson = new UpdatePerson(Id);
+            updatePerson.ShowDialog();
         }
     }
 }

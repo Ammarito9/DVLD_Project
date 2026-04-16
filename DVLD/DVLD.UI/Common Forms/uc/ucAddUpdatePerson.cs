@@ -13,18 +13,65 @@ namespace DVLD.UI.Common_Forms
 {
     public partial class ucAddUpdatePerson : UserControl
     {
-        public ucAddUpdatePerson()
+        private int Id = 0;
+        public ucAddUpdatePerson(bool IsUpdateMode = false, int ID = 0)
         {
             InitializeComponent();
 
             cbCountry.DataSource = Country.GetAllCountryNames();
-            cbCountry.SelectedIndex = 100;
+            
+            if (IsUpdateMode)
+            {
+                Id = ID;
+                InitializeAsUpdateMode(ID);
+            }
+            else
+                cbCountry.SelectedIndex = 100;
+        }
+
+        private void InitializeAsUpdateMode(int ID)
+        {
+            lblCardTitle.Text = "Update Person";
+            LoadPersonDataToUpdate(ID);
         }
         private void txtFirstName_Validated(object sender, EventArgs e)
         {
             CheckIsAllFieldsValid();
         }
 
+        private void LoadGender(string gender)
+        {
+            if (gender == "M")
+            {
+                rbMale.Checked = true;
+                rbFemale.Checked = false;
+
+                return;
+            }
+            rbMale.Checked = false;
+            rbFemale.Checked = true;
+        }
+        private void LoadPersonDataToUpdate(int ID)
+        {
+            Person person = Person.Find(ID);
+
+            if (person != null)
+            {
+                lblID.Text = Convert.ToString(person.ID);
+                txtFirstName.Text = person.FirstName;
+                txtSecondName.Text = person.SecondName;
+                txtThirdName.Text = person.ThirdName;
+                txtLastName.Text = person.LastName;
+                txtNationalNumber.Text = person.NationalNumber;
+                LoadGender(person.Gender);
+                txtEmail.Text = person.Email;
+                txtAddress.Text = person.Address;
+                dtpDateOfBirth.Value = person.DateOfBirth;
+                txtPhoneNumber.Text = person.PhoneNumber;
+                cbCountry.SelectedIndex = person.NationalityCountryID;
+                pbPersonImage.ImageLocation = person.PersonalPhotoPath; 
+            }
+        }
         private void txtLastName_Validated(object sender, EventArgs e)
         {
             CheckIsAllFieldsValid();
@@ -58,7 +105,11 @@ namespace DVLD.UI.Common_Forms
             openFileDialog.Multiselect = false;
 
             if (openFileDialog.ShowDialog() == DialogResult.OK)
-                pbPersonImage.Image = Image.FromFile(openFileDialog.FileName);
+            {
+                var path = openFileDialog.FileName;
+                pbPersonImage.Image = Image.FromFile(path);
+                pbPersonImage.Tag = path;
+            }
         }
 
         private void llblRemove_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -99,9 +150,10 @@ namespace DVLD.UI.Common_Forms
                 epNonNullFields.SetError(txtNationalNumber, "");
             }
 
-            if (Person.IsExists(txtNationalNumber.Text))
+            if (Person.IsExists(txtNationalNumber.Text, Id))
             {
                 epNationalNumberAvailable.SetError(txtNationalNumber, "The national number is used. Please use another one!");
+                return false;
             }
             else
             {
@@ -118,17 +170,7 @@ namespace DVLD.UI.Common_Forms
                 epGender.SetError(lblGender, "");
             }
 
-            if (txtEmail.Text == string.Empty)
-            {
-                epNonNullFields.SetError(txtEmail, "This Filed Can't be empty!");
-                return false;
-            }
-            else
-            {
-                epNonNullFields.SetError(txtEmail, "");
-            }
-
-            if (!(txtEmail.Text.Contains("@") && txtEmail.Text.Contains(".")))
+            if (!(txtEmail.Text.Contains("@") && txtEmail.Text.Contains(".")) && !string.IsNullOrEmpty(txtEmail.Text))
             {
                 epHandleEmailFormatting.SetError(txtEmail, "Please write a valid email formatting (ex: example@example.example)");
                 return false;
@@ -163,7 +205,10 @@ namespace DVLD.UI.Common_Forms
 
         private void LoadAndSavePersonData()
         {
-            Person person = new Person();
+            Person person = Person.Find(Id);
+
+            if (person == null) person = new Person();
+
             person.FirstName = txtFirstName.Text;
             person.SecondName = txtSecondName.Text;
             person.ThirdName = txtThirdName.Text;
@@ -175,7 +220,10 @@ namespace DVLD.UI.Common_Forms
             person.Address = txtAddress.Text;
             person.PhoneNumber = txtPhoneNumber.Text;
             person.NationalityCountryID = Country.Find(cbCountry.SelectedItem?.ToString()).ID;
-            person.PersonalPhotoPath = pbPersonImage.ImageLocation;
+            if (pbPersonImage.Tag?.ToString() == null)
+                person.PersonalPhotoPath = pbPersonImage.ImageLocation;
+            else
+                person.PersonalPhotoPath = pbPersonImage.Tag.ToString();
 
             if (person.Save())
             {

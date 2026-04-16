@@ -111,12 +111,12 @@ namespace DVLD.BLL.Entities
             User user = new User();
             user = Find(username);
 
-            if (user == null) return null;
-            if (user.IsActive == false) return null;
-            if (user.Password != password) return null;
+            if (user.IsActive == false) user.IsActive = false;
+            if (user.Password != password) user.Password = String.Empty;
 
             return user;
         }
+
         public static void AddCredentialsToRememberMe(string UserName) => FileDataAccess.WriteToFile(PathOfRememberMeFile, UserName);
 
         public static User GetCredentialsFromRememberMe()

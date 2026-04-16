@@ -175,7 +175,8 @@ namespace DVLD.UI.Main_Forms
 
         private void cbFilterByCountry_SelectedIndexChanged(object sender, EventArgs e)
         {
-            FillPeopleToDataView(Person.GetAllFilterBy(filterBy, cbFilterByCountry.SelectedItem?.ToString()));
+            if (cbFilterByCountry.SelectedIndex != -1)
+                FillPeopleToDataView(Person.GetAllFilterBy(filterBy, cbFilterByCountry.SelectedItem?.ToString()));
         }
 
         private void miAddNewPerson_Click(object sender, EventArgs e)
@@ -197,6 +198,38 @@ namespace DVLD.UI.Main_Forms
             var personDetails = new PersonDetails(id);
             personDetails.ShowDialog();
 
+            FillPeopleToDataView(Person.GetAll());
+        }
+
+        private void miDelete_Click(object sender, EventArgs e)
+        {
+            if (dgvPeople.CurrentRow == null)
+            {
+                MessageBox.Show("Person is not found!", "Error");
+                return;
+            }
+
+            int id = Convert.ToInt32(dgvPeople.CurrentRow.Cells["ID"].Value);
+
+            if (MessageBox.Show($"Are you sure to delete person with ID {id}", "Confirm Deleting", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                Person.Delete(id);
+
+            FillPeopleToDataView(Person.GetAll());
+        }
+
+        private void miEdit_Click(object sender, EventArgs e)
+        {
+            if (dgvPeople.CurrentRow == null)
+            {
+                MessageBox.Show("Person is not found!", "Error");
+                return;
+            }
+
+            int id = Convert.ToInt32(dgvPeople.CurrentRow.Cells["ID"].Value);
+            UpdatePerson updatePersonForm = new UpdatePerson(id);
+            updatePersonForm.ShowDialog();
+
+            FillPeopleToDataView(Person.GetAll());
         }
     }
 }

@@ -43,9 +43,17 @@ namespace DVLD.UI.Main_Forms
             }
             CurrentUser.LoggedInUser = User.CheckCredentials(txtUsername.Text, txtPassword.Text);
 
-            if (CurrentUser.LoggedInUser == null)
+            if (CurrentUser.LoggedInUser.Password == String.Empty)
             {
                 MessageBox.Show("Invalid username or password", "Wrong Credentials", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+
+                return;
+            }
+            else if (CurrentUser.LoggedInUser.IsActive == false) 
+            {
+                MessageBox.Show("The user is deactivated", "Please contact your admin!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+
+                return;
             }
             else
             {

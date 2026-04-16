@@ -8,7 +8,7 @@ namespace DVLD.DAL.DTO
 {
     public class PersonDTO
     {
-        public int ID { get; private set; }
+        public int ID { get; set; }
         public int NationalityCountryID { get; set; }
         public string NationalNumber { get; set; }
         public string FirstName { get; set; }
