@@ -124,7 +124,7 @@ namespace DVLD.DAL.Data
                                 Password = @Password,
                                 PersonID = @PersonID,
                                 Permissions = @Permissions,
-                                IsActive = @IsActive,
+                                IsActive = @IsActive 
                             WHERE ID = @ID;";
 
             using var cmd = new SqlCommand(query, conn);
@@ -155,7 +155,7 @@ namespace DVLD.DAL.Data
         {
             using var conn = new SqlConnection(Connection.ConnectionString);
 
-            string query = @"DELET Users
+            string query = @"DELETE FROM Users
                             WHERE ID = @ID";
 
             using var cmd = new SqlCommand(query, conn);
@@ -181,7 +181,8 @@ namespace DVLD.DAL.Data
         {
             using var conn = new SqlConnection(Connection.ConnectionString);
 
-            string query = @"SELECT * FROM Users;";
+            string query = @"SELECT u.ID, u.PersonID, p.FirstName + ' ' + p.LastName as FullName, u.Username, u.IsActive FROM Users u
+                            JOIN Persons p on u.PersonID = p.ID";
 
             using var cmd = new SqlCommand(query, conn);
 
@@ -197,6 +198,65 @@ namespace DVLD.DAL.Data
                     dt.Load(reader);
 
                 return dt;
+            }
+            catch (SqlException ex)
+            {
+                throw new Exception("Error Occurred from the database!", ex);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error Occurred in DAL!", ex);
+            }
+        }
+
+        public static DataTable GetAllFiltered(String filter, String filterValue)
+        {
+            using var conn = new SqlConnection(Connection.ConnectionString);
+
+            string query = "", WhereClause = "";
+
+            switch (filter)
+            {
+                case "Username":
+                    WhereClause = "u.Username LIKE @FilterValue";
+                    filterValue = $"%{filterValue}%";
+                    break;
+                case "FullName":
+                    WhereClause = "p.FirstName + ' ' + p.LastName LIKE @FilterValue";
+                    filterValue = $"%{filterValue}%";
+                    break;
+                case "UserId":
+                    WhereClause = "u.ID = @FilterValue";
+                    break;
+                case "PersonId":
+                    WhereClause = "u.PersonId = @FilterValue";
+                    break;
+                case "IsActive":
+                    WhereClause = "u.IsActive = @FilterValue";
+                    break;
+                default:
+                    break;
+            }
+
+            query = @$"SELECT u.ID, u.PersonID, p.FirstName + ' ' + p.LastName as FullName, u.Username, u.IsActive 
+                    FROM Users u
+                    JOIN Persons p on u.PersonID = p.ID WHERE {WhereClause};";
+
+            using var cmd = new SqlCommand(query, conn);
+            cmd.Parameters.AddWithValue("@FilterValue", filterValue);
+
+            try
+            {
+                conn.Open();
+
+                using var reader = cmd.ExecuteReader();
+
+                DataTable FilteredUsers = new DataTable();
+
+                if (reader.HasRows)
+                    FilteredUsers.Load(reader);
+
+                return FilteredUsers;
             }
             catch (SqlException ex)
             {
@@ -223,6 +283,63 @@ namespace DVLD.DAL.Data
 
                 object result = cmd.ExecuteScalar();
                 return result != null;
+            }
+            catch (SqlException ex)
+            {
+                throw new Exception("Error Occurred from the database!", ex);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error Occurred in DAL!", ex);
+            }
+        }
+
+        public static bool IsExist(String Username)
+        {
+            using var conn = new SqlConnection(Connection.ConnectionString);
+
+            string query = @"SELECT 1 FROM Users 
+                            WHERE Username = @Username";
+
+            using var cmd = new SqlCommand(query, conn);
+            cmd.Parameters.AddWithValue("@Username", Username);
+
+            try
+            {
+                conn.Open();
+
+                object result = cmd.ExecuteScalar();
+                return result != null;
+            }
+            catch (SqlException ex)
+            {
+                throw new Exception("Error Occurred from the database!", ex);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error Occurred in DAL!", ex);
+            }
+        }
+
+        public static bool DoesPersonIdConnectedToUser(int id)
+        {
+            using var conn = new SqlConnection(Connection.ConnectionString);
+
+            string query = @"
+                                SELECT 1 FROM Users u
+                                JOIN Persons p ON p.ID = u.PersonID
+                                WHERE p.ID = @id;
+                            ";
+
+            using var cmd = new SqlCommand(query, conn);
+            cmd.Parameters.AddWithValue("@id", id);
+
+            try
+            {
+                conn.Open();
+
+                object result = cmd.ExecuteScalar();
+                return (result != null);
             }
             catch (SqlException ex)
             {

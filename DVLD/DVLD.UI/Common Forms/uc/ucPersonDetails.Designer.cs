@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            lblCardTitle = new Label();
             groupBox1 = new GroupBox();
             llblEditPersonInfo = new LinkLabel();
             lblPersonIdValue = new Label();
@@ -71,16 +70,6 @@
             ((System.ComponentModel.ISupportInitialize)pbCountry).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pbName).BeginInit();
             SuspendLayout();
-            // 
-            // lblCardTitle
-            // 
-            lblCardTitle.AutoSize = true;
-            lblCardTitle.Font = new Font("Segoe UI", 16.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            lblCardTitle.Location = new Point(349, 38);
-            lblCardTitle.Name = "lblCardTitle";
-            lblCardTitle.Size = new Size(203, 38);
-            lblCardTitle.TabIndex = 50;
-            lblCardTitle.Text = "Person Details";
             // 
             // groupBox1
             // 
@@ -424,7 +413,6 @@
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            Controls.Add(lblCardTitle);
             Controls.Add(groupBox1);
             Name = "ucPersonDetails";
             Size = new Size(900, 450);
@@ -441,11 +429,9 @@
             ((System.ComponentModel.ISupportInitialize)pbCountry).EndInit();
             ((System.ComponentModel.ISupportInitialize)pbName).EndInit();
             ResumeLayout(false);
-            PerformLayout();
         }
 
         #endregion
-        private Label lblCardTitle;
         private GroupBox groupBox1;
         private LinkLabel llblEditPersonInfo;
         private Label lblPersonIdValue;

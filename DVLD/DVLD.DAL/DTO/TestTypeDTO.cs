@@ -11,16 +11,16 @@ namespace DVLD.DAL.DTO
         public int ID { get; set; }
         public string TestTypeName { get; set; }
         public string TestTypeDescription { get; set; }
-        public float TestFee { get; set; }
+        public Decimal TestFee { get; set; }
 
-        public TestTypeDTO(int ID, string TestTypeName, string TestTypeDescription, float TestFee)
+        public TestTypeDTO(int ID, string TestTypeName, string TestTypeDescription, Decimal TestFee)
         {
             this.ID = ID;
             this.TestTypeName = TestTypeName;
             this.TestTypeDescription = TestTypeDescription;
             this.TestFee = TestFee;
         }
-        public TestTypeDTO(string TestTypeName, string TestTypeDescription, float TestFee)
+        public TestTypeDTO(string TestTypeName, string TestTypeDescription, Decimal TestFee)
         {
             this.TestTypeName = TestTypeName;
             this.TestTypeDescription = TestTypeDescription;

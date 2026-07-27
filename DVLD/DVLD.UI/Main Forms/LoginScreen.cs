@@ -43,6 +43,8 @@ namespace DVLD.UI.Main_Forms
             }
             CurrentUser.LoggedInUser = User.CheckCredentials(txtUsername.Text, txtPassword.Text);
 
+            // (CheckCredentials) func returns password empty if the user not found.
+            // and it returns IsActive false if it's found but not active.
             if (CurrentUser.LoggedInUser.Password == String.Empty)
             {
                 MessageBox.Show("Invalid username or password", "Wrong Credentials", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -67,12 +69,11 @@ namespace DVLD.UI.Main_Forms
                 }
             }
             MainForm mf = new MainForm();
-            this.Hide();
             txtUsername.Clear();
             txtPassword.Clear();
             mf.ShowDialog();
+            this.Close();
         }
-
 
         private void txtUsername_MouseLeave(object sender, EventArgs e)
         {

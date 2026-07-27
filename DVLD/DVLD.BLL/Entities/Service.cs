@@ -11,11 +11,21 @@ namespace DVLD.BLL.Entities
 {
     public class Service
     {
+        public enum Services
+        {
+            FIRST_TIME_DRIVING_LICENSE_ISSUANCE = 1,
+            DRIVING_LICENSE_RENEWAL,
+            REPLACEMENT_OF_LOST_LICENSE,
+            REPLACEMENT_OF_DAMAGED_LICENSE,
+            RELEASE_OF_DETAINED_LICENSE,
+            INTERNATIONAL_DRIVING_LICENSE_ISSUANCE,
+            RETAKE_TEST = 1008,
+        }
         public int ID { get; set; }
         public string ServiceName { get; set; }
-        public float ServiceFee { get; set; }
+        public Decimal ServiceFee { get; set; }
 
-        private Service(int ID, string ServiceName, float ServiceFee)
+        private Service(int ID, string ServiceName, Decimal ServiceFee)
         {
             this.ID = ID;
             this.ServiceName = ServiceName;
@@ -30,14 +40,15 @@ namespace DVLD.BLL.Entities
                 return null;
 
             DataRow dr = dt.Rows[0];
-            return new Service((int)dr["ID"], (string)dr["ServiceName"], (float)dr["ServiceFee"]);
+            return new Service((int)dr["ID"], (string)dr["ServiceName"], (Decimal)dr["ServiceFee"]);
         }
         private bool Update()
         {
             if(!ServiceData.IsExist(ID)) return false;
 
-            var ServiceDTO = new ServiceDTO(ServiceName, ServiceFee);
+            var ServiceDTO = new ServiceDTO(ID, ServiceName, ServiceFee);
             int rows = ServiceData.Update(ServiceDTO);
+
             return rows > 0;
         }
         public static DataTable GetAll() => ServiceData.GetAll();

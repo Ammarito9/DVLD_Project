@@ -68,7 +68,8 @@ namespace DVLD.UI.Common_Forms
                 txtAddress.Text = person.Address;
                 dtpDateOfBirth.Value = person.DateOfBirth;
                 txtPhoneNumber.Text = person.PhoneNumber;
-                cbCountry.SelectedIndex = person.NationalityCountryID;
+                // It's 0 based index and the IDs are 1 based so -1 to make the IDs 0 based.
+                cbCountry.SelectedIndex = person.NationalityCountryID - 1;
                 pbPersonImage.ImageLocation = person.PersonalPhotoPath; 
             }
         }
@@ -117,6 +118,7 @@ namespace DVLD.UI.Common_Forms
             pbPersonImage.Image = null;
         }
 
+        // TODO: Validation fires at wrong timing in some cases — revisit after project completion
         private bool CheckIsAllFieldsValid()
         {
 

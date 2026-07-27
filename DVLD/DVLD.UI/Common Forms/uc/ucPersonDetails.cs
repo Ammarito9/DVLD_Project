@@ -13,13 +13,17 @@ namespace DVLD.UI.Common_Forms
 {
     public partial class ucPersonDetails : UserControl
     {
-        private int Id;
-        private Person temp_person;
+        public int Id { get; private set; }
+        public Person person { get; private set; } = new Person();
+        public ucPersonDetails()
+        {
+            InitializeComponent();
+        }
         public ucPersonDetails(int ID)
         {
             Id = ID;
             InitializeComponent();
-            temp_person = Person.Find(ID);
+            person = Person.Find(ID);
             LoadPersonDetails();
         }
 
@@ -29,20 +33,47 @@ namespace DVLD.UI.Common_Forms
                 return "N/A";
             return filed;
         }
-        private void LoadPersonDetails()
+        public void LoadPersonDetails(int id = 0)
         {
-            if (temp_person != null)
+            if (id != 0)
             {
-                lblPersonIdValue.Text = Convert.ToString(temp_person.ID);
-                lblNameValue.Text = temp_person.GetFullName();
-                lblNationalnumberValue.Text = temp_person.NationalNumber;
-                lblGenderValue.Text = temp_person.Gender == "M" ? "Male" : "Female";
-                lblEmailValue.Text = HandleNullableOrEmptyFiled(temp_person.Email);
-                lblAddressValue.Text = temp_person.Address;
-                lblDateOfBirthValue.Text = temp_person.DateOfBirth.ToShortDateString();
-                lblPhoneValue.Text = temp_person.PhoneNumber;
-                lblCountryValue.Text = temp_person.GetPersonNationalityNameByID(temp_person.ID);
-                pbPersonImage.ImageLocation = temp_person.PersonalPhotoPath;
+                person = Person.Find(id);
+            }
+            
+            if (person != null)
+            {
+                lblPersonIdValue.Text = Convert.ToString(person.ID);
+                lblNameValue.Text = person.GetFullName();
+                lblNationalnumberValue.Text = person.NationalNumber;
+                lblGenderValue.Text = person.Gender == "M" ? "Male" : "Female";
+                lblEmailValue.Text = HandleNullableOrEmptyFiled(person.Email);
+                lblAddressValue.Text = person.Address;
+                lblDateOfBirthValue.Text = person.DateOfBirth.ToShortDateString();
+                lblPhoneValue.Text = person.PhoneNumber;
+                lblCountryValue.Text = person.GetPersonNationalityNameByID(person.ID);
+                pbPersonImage.ImageLocation = person.PersonalPhotoPath;
+            }
+        }
+
+        public void LoadPersonDetails(String NationalID)
+        {
+            if (NationalID != String.Empty)
+            {
+                person = Person.Find(NationalID);
+            }
+
+            if (person != null)
+            {
+                lblPersonIdValue.Text = Convert.ToString(person.ID);
+                lblNameValue.Text = person.GetFullName();
+                lblNationalnumberValue.Text = person.NationalNumber;
+                lblGenderValue.Text = person.Gender == "M" ? "Male" : "Female";
+                lblEmailValue.Text = HandleNullableOrEmptyFiled(person.Email);
+                lblAddressValue.Text = person.Address;
+                lblDateOfBirthValue.Text = person.DateOfBirth.ToShortDateString();
+                lblPhoneValue.Text = person.PhoneNumber;
+                lblCountryValue.Text = person.GetPersonNationalityNameByID(person.ID);
+                pbPersonImage.ImageLocation = person.PersonalPhotoPath;
             }
         }
 
@@ -50,6 +81,10 @@ namespace DVLD.UI.Common_Forms
         {
             UpdatePerson updatePerson = new UpdatePerson(Id);
             updatePerson.ShowDialog();
+
+
+            person = Person.Find(Id);
+            LoadPersonDetails();
         }
     }
 }

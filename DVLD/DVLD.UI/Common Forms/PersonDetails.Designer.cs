@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             btnClose = new Button();
+            lblCardTitle = new Label();
             SuspendLayout();
             // 
             // btnClose
@@ -41,23 +42,36 @@
             btnClose.UseVisualStyleBackColor = true;
             btnClose.Click += btnClose_Click;
             // 
+            // lblCardTitle
+            // 
+            lblCardTitle.AutoSize = true;
+            lblCardTitle.Font = new Font("Segoe UI", 16.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            lblCardTitle.Location = new Point(325, 9);
+            lblCardTitle.Name = "lblCardTitle";
+            lblCardTitle.Size = new Size(203, 38);
+            lblCardTitle.TabIndex = 93;
+            lblCardTitle.Text = "Person Details";
+            // 
             // PersonDetails
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(882, 472);
             ControlBox = false;
+            Controls.Add(lblCardTitle);
             Controls.Add(btnClose);
             MaximizeBox = false;
             MinimizeBox = false;
             Name = "PersonDetails";
             Text = "PersonDetails";
             ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
 
         private ucPersonDetails ucPersonDetails1;
         private Button btnClose;
+        private Label lblCardTitle;
     }
 }

@@ -19,10 +19,19 @@ namespace DVLD.BLL.Entities
             Update,
             AddNew
         }
+        public enum Filters
+        {
+            None,
+            UserId,
+            PersonId,
+            FullName,
+            Username,
+            IsActive
+        }
 
         Mode mode;
         public int ID { get; private set; }
-        public Person Person { get; private set; }
+        public Person Person { get; set; }
         public string UserName { get; set; }
         public string Password { get; set; }
         public int Permissions { get; set; }
@@ -58,7 +67,7 @@ namespace DVLD.BLL.Entities
                 return null;
 
             DataRow dr = dt.Rows[0];
-            return new User((int)dr["ID"], (int)dr["PersonID"], (string)dr["UserName"], (string)dr["Password"], (int)dr["Permissions"], (bool)dr["IsActive"]);
+            return new User((int)dr["ID"], (int)dr["PersonID"], (string)dr["UserName"], (string)dr["Password"], (byte)dr["Permissions"], (bool)dr["IsActive"]);
         }
         public static User Find(string Username)
         {
@@ -90,6 +99,8 @@ namespace DVLD.BLL.Entities
         }
         public static bool Delete(int ID) => (UserData.Delete(ID) != 0);
         public static DataTable GetAll() => UserData.GetAll();
+
+        public static DataTable GetFilterBy(Filters filter, String FilterValue) => UserData.GetAllFiltered(filter.ToString(), FilterValue);
         public bool Save()
         {
             switch (mode)
@@ -135,5 +146,10 @@ namespace DVLD.BLL.Entities
 
             return null;
         }
+
+        public static bool DoesPersonIdConnectedToUser(int Id) => UserData.DoesPersonIdConnectedToUser(Id);
+
+        public static bool IsExist(int id) => UserData.IsExist(id);
+        public static bool IsExist(String Username) => UserData.IsExist(Username);
     }
 }

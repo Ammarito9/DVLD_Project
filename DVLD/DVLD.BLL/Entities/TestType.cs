@@ -15,9 +15,9 @@ namespace DVLD.BLL.Entities
         public int ID { get; set; }
         public string TestTypeName { get; set; }
         public string TestTypeDescription { get; set; }
-        public float TestFee { get; set; }
+        public Decimal TestFee { get; set; }
 
-        private TestType(int ID, string TestTypeName, string TestTypeDescription, float TestFee)
+        private TestType(int ID, string TestTypeName, string TestTypeDescription, Decimal TestFee)
         {
             this.ID = ID;
             this.TestTypeName = TestTypeName;
@@ -33,13 +33,13 @@ namespace DVLD.BLL.Entities
                 return null;
 
             DataRow dr = dt.Rows[0];
-            return new TestType((int)dr["ID"], (string)dr["TestTypeName"], (string)dr["TestTypeDescription"], (float)dr["TestFee"]);
+            return new TestType((int)dr["ID"], (string)dr["TestTypeName"], (string)dr["TestTypeDescription"], (Decimal)dr["TestFee"]);
         }
         private bool Update()
         {
             if (!ServiceData.IsExist(ID)) return false;
 
-            var TestTypeDTO = new TestTypeDTO(TestTypeName, TestTypeDescription, TestFee);
+            var TestTypeDTO = new TestTypeDTO(ID, TestTypeName, TestTypeDescription, TestFee);
             int rows = TestTypeData.Update(TestTypeDTO);
             return rows > 0;
         }

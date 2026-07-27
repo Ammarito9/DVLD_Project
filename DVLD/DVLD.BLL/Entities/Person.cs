@@ -196,6 +196,15 @@ namespace DVLD.BLL.Entities
 
         public static bool IsExists(int ID) => PersonData.IsExist(ID);
         public static bool IsExists(string NationalNumber, int IdForUpdate = 0) => PersonData.IsExist(NationalNumber, IdForUpdate);
+        public int GetAge()
+        {
+            int age = DateTime.Today.Year - DateOfBirth.Year - 1;
+
+            if ((DateTime.Today.Month - DateOfBirth.Month) >= 0)
+                age++;
+
+            return age;
+        }
         public bool Save()
         {
             switch (mode)
@@ -210,7 +219,8 @@ namespace DVLD.BLL.Entities
                 case Mode.Update:
                     return Update();
 
-                default: return false;
+                default: 
+                    return false;
             }
         }
     }

@@ -252,7 +252,7 @@
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.ButtonFace;
-            ClientSize = new Size(1400, 541);
+            ClientSize = new Size(1407, 552);
             ControlBox = false;
             Controls.Add(rbFilterByFemale);
             Controls.Add(rbFilterByMale);
@@ -264,9 +264,9 @@
             Controls.Add(cbWhatToFilterBy);
             Controls.Add(lblManagePeople);
             Controls.Add(btnAdd);
+            Controls.Add(txtOnlyDigitFilterBy);
             Controls.Add(cbFilterByCountry);
             Controls.Add(txtFilterBy);
-            Controls.Add(txtOnlyDigitFilterBy);
             FormBorderStyle = FormBorderStyle.Fixed3D;
             MaximizeBox = false;
             MdiChildrenMinimizedAnchorBottom = false;
