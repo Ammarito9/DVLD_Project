@@ -33,7 +33,7 @@ namespace DVLD.BLL.Entities
         public Driver() { mode = Mode.AddNew; }
         private Driver(int iD, int personID, int createdByUserID, DateTime createDate)
         {
-            mode = Mode.AddNew;
+            mode = Mode.Update;
             ID = iD;
             PersonID = personID;
             CreatedByUserID = createdByUserID;

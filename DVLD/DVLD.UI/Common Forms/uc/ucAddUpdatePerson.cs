@@ -109,13 +109,13 @@ namespace DVLD.UI.Common_Forms
             {
                 var path = openFileDialog.FileName;
                 pbPersonImage.Image = Image.FromFile(path);
-                pbPersonImage.Tag = path;
+                pbPersonImage.ImageLocation = path;
             }
         }
 
         private void llblRemove_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            pbPersonImage.Image = null;
+            pbPersonImage.ImageLocation = null;
         }
 
         // TODO: Validation fires at wrong timing in some cases — revisit after project completion
@@ -204,12 +204,45 @@ namespace DVLD.UI.Common_Forms
 
             return true;
         }
+        
+        private bool HandlePersonImage(ref Person person)
+        {
+            if (person.PersonalPhotoPath != pbPersonImage.ImageLocation)
+            {
+                if (!string.IsNullOrEmpty(person.PersonalPhotoPath))
+                {
+                    try
+                    {
+                        File.Delete(person.PersonalPhotoPath);
+                    }
+                    catch (IOException ex)
+                    {
+                    }
+                }
 
+                if (!string.IsNullOrEmpty(pbPersonImage.ImageLocation))
+                {
+                    string sourceImagePath = pbPersonImage.ImageLocation;
+                    if (DVLD.BLL.Util.CopyImageToProjectImageFolder(ref sourceImagePath))
+                    {
+                        pbPersonImage.ImageLocation = sourceImagePath;
+                        return true;
+                    }
+                    
+                    MessageBox.Show("Failed to copy the image file", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return false;
+                }
+            }
+            return true;
+        }
         private void LoadAndSavePersonData()
         {
             Person person = Person.Find(Id);
 
             if (person == null) person = new Person();
+
+            if (!HandlePersonImage(ref person))
+                return;
 
             person.FirstName = txtFirstName.Text;
             person.SecondName = txtSecondName.Text;
@@ -222,10 +255,9 @@ namespace DVLD.UI.Common_Forms
             person.Address = txtAddress.Text;
             person.PhoneNumber = txtPhoneNumber.Text;
             person.NationalityCountryID = Country.Find(cbCountry.SelectedItem?.ToString()).ID;
-            if (pbPersonImage.Tag?.ToString() == null)
-                person.PersonalPhotoPath = pbPersonImage.ImageLocation;
-            else
-                person.PersonalPhotoPath = pbPersonImage.Tag.ToString();
+            
+           
+            person.PersonalPhotoPath = pbPersonImage.ImageLocation;
 
             if (person.Save())
             {
