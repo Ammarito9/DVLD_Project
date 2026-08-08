@@ -22,13 +22,13 @@ namespace DVLD.UI.Main_Forms
         }
         private void FillDataFromRememberMeFile()
         {
-            CurrentUser.LoggedInUser = User.GetCredentialsFromRememberMe();
+            User user = User.GetStoredUserCredentials();
 
-            if (CurrentUser.LoggedInUser != null)
-            {
-                txtUsername.Text = CurrentUser.LoggedInUser.UserName;
-                txtPassword.Text = CurrentUser.LoggedInUser.Password;
-            }
+            if (user is null)
+                return;
+
+            txtUsername.Text = user.UserName;
+            txtPassword.Text = user.Password;
         }
         private void btnClose_Click(object sender, EventArgs e)
         {
@@ -37,50 +37,44 @@ namespace DVLD.UI.Main_Forms
 
         private void btnLogin_Click(object sender, EventArgs e)
         {
-            if (!ValidateCredentialsTextBoxes(txtUsername) || !ValidateCredentialsTextBoxes(txtPassword)) 
-            {
+            if (!Validate())
                 return;
-            }
-            CurrentUser.LoggedInUser = User.CheckCredentials(txtUsername.Text, txtPassword.Text);
 
-            // (CheckCredentials) func returns password empty if the user not found.
-            // and it returns IsActive false if it's found but not active.
-            if (CurrentUser.LoggedInUser.Password == String.Empty)
+            User user = User.CheckCredentials(txtUsername.Text, txtPassword.Text);
+
+            if (user is null)
             {
                 MessageBox.Show("Invalid username or password", "Wrong Credentials", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-
                 return;
             }
-            else if (CurrentUser.LoggedInUser.IsActive == false) 
+            // (CheckCredentials) func returns password empty if the user not found.
+            // and it returns IsActive false if it's found but not active.
+            if (user.Password == String.Empty)
+            {
+                MessageBox.Show("Invalid username or password", "Wrong Credentials", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+            if (user.IsActive == false)
             {
                 MessageBox.Show("The user is deactivated", "Please contact your admin!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-
                 return;
+            }
+
+            if (chkRememberMe.Checked)
+            {
+                User.StoreUserCredentials(txtUsername.Text, txtPassword.Text);
             }
             else
             {
-                if (chkRememberMe.Checked)
-                {
-                    User.AddCredentialsToRememberMe(txtUsername.Text);
-                }
-                else
-                {
-                    User.AddCredentialsToRememberMe(string.Empty);
-                }
+                User.StoreUserCredentials(string.Empty, string.Empty);
             }
+
+            CurrentUser.LoggedInUser = user;
             MainForm mf = new MainForm();
             txtUsername.Clear();
             txtPassword.Clear();
             mf.ShowDialog();
             this.Close();
-        }
-
-        private void txtUsername_MouseLeave(object sender, EventArgs e)
-        {
-            if (txtUsername.Text == string.Empty)
-            {
-                txtUsername.Focus();
-            }
         }
 
         private bool ValidateCredentialsTextBoxes(object textBox)
@@ -97,5 +91,14 @@ namespace DVLD.UI.Main_Forms
             }
         }
 
+        private void txtUsername_Validating(object sender, CancelEventArgs e)
+        {
+            ValidateCredentialsTextBoxes(sender);
+        }
+
+        private void txtPassword_Validating(object sender, CancelEventArgs e)
+        {
+            ValidateCredentialsTextBoxes(sender);
+        }
     }
 }

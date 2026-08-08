@@ -11,7 +11,7 @@ namespace DVLD.DAL.Data
     {
         public static DataRow GetByID(int ID)
         {
-            using var conn = new SqlConnection(Connection.ConnectionString);
+            using var conn = new SqlConnection(Connection.DBConnectionString);
 
             string query = @"SELECT * FROM TestAppointments
                             WHERE ID = @ID;";
@@ -42,7 +42,7 @@ namespace DVLD.DAL.Data
         }
         public static DataTable GetAll()
         {
-            using var conn = new SqlConnection(Connection.ConnectionString);
+            using var conn = new SqlConnection(Connection.DBConnectionString);
 
             string query = @"SELECT * FROM TestAppointments;";
 
@@ -71,7 +71,7 @@ namespace DVLD.DAL.Data
         }
         public static DataTable GetAllFiltered(int testTypeID, int localDrivingLicenseApplicationID)
         {
-            using var conn = new SqlConnection(Connection.ConnectionString);
+            using var conn = new SqlConnection(Connection.DBConnectionString);
 
             string query = @"SELECT * FROM TestAppointments
 WHERE TestTypeID = @ID AND LocalDrivingLicenseApplicationID = @localDrivingLicenseApplicationID;";
@@ -103,7 +103,7 @@ WHERE TestTypeID = @ID AND LocalDrivingLicenseApplicationID = @localDrivingLicen
         }
         public static int Add(TestAppointmentDTO testAppointmentDTO)
         {
-            using var conn = new SqlConnection(Connection.ConnectionString);
+            using var conn = new SqlConnection(Connection.DBConnectionString);
 
             string query = @"INSERT INTO TestAppointments(TestTypeID, LocalDrivingLicenseApplicationID, CreatedByUserID, ScheduledDate, PaidFee, IsLocked, RetakeTestApplicationID)
                             VALUES (@TestTypeID, @LocalDrivingLicenseApplicationID, @CreatedByUserID, @ScheduledDate, @PaidFee, @IsLocked, @RetakeTestApplicationID);
@@ -141,7 +141,7 @@ WHERE TestTypeID = @ID AND LocalDrivingLicenseApplicationID = @localDrivingLicen
         }
         public static int Update(TestAppointmentDTO testAppointmentDTO)
         {
-            using var conn = new SqlConnection(Connection.ConnectionString);
+            using var conn = new SqlConnection(Connection.DBConnectionString);
 
             string query = @"UPDATE TestAppointments 
                             SET
@@ -183,7 +183,7 @@ WHERE TestTypeID = @ID AND LocalDrivingLicenseApplicationID = @localDrivingLicen
         }
         public static int Delete(int iD)
         {
-            using var conn = new SqlConnection(Connection.ConnectionString);
+            using var conn = new SqlConnection(Connection.DBConnectionString);
 
             string query = @"DELETE FROM TestAppointments
 WHERE ID = @ID;";
@@ -210,7 +210,7 @@ WHERE ID = @ID;";
         }
         public static bool IsExist(int iD)
         {
-            using var conn = new SqlConnection(Connection.ConnectionString);
+            using var conn = new SqlConnection(Connection.DBConnectionString);
 
             string query = @"SELECT 1 FROM TestAppointments
                             WHERE ID = @ID;";
@@ -237,7 +237,7 @@ WHERE ID = @ID;";
         // It counts the number of the privous test appointments witch are the number of trials
         public static int GetNumberOfTestTrials(int localDrivingLicenseID, int testTypeID)
         {
-            using var conn = new SqlConnection(Connection.ConnectionString);
+            using var conn = new SqlConnection(Connection.DBConnectionString);
 
             string query = @"SELECT Count(t.ID) AS Trials FROM TestAppointments t
                             WHERE t.LocalDrivingLicenseApplicationID = @ID AND t.TestTypeID = @testType;";
@@ -270,7 +270,7 @@ WHERE ID = @ID;";
         }
         public static bool IsThereActiveAppointment(int localDrivingLicenseID)
         {
-            using var conn = new SqlConnection(Connection.ConnectionString);
+            using var conn = new SqlConnection(Connection.DBConnectionString);
 
             string query = @"SELECT 1 FROM TestAppointments t
                             WHERE t.LocalDrivingLicenseApplicationID = @ID AND t.IsLocked = 0;";

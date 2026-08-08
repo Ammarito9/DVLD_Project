@@ -18,7 +18,7 @@ namespace DVLD.DAL.Data
 
         public static DataTable GetByID(int iD)
         {
-            using var conn = new SqlConnection(Connection.ConnectionString);
+            using var conn = new SqlConnection(Connection.DBConnectionString);
 
             string query = @"SELECT * FROM Countries
                             WHERE ID = @ID";
@@ -49,7 +49,7 @@ namespace DVLD.DAL.Data
         }
         public static DataTable GetByCountryName(string CountryName)
         {
-            using var conn = new SqlConnection(Connection.ConnectionString);
+            using var conn = new SqlConnection(Connection.DBConnectionString);
 
             string query = @"SELECT * FROM Countries
                             WHERE CountryName = @CountryName";
@@ -81,7 +81,7 @@ namespace DVLD.DAL.Data
 
         public static int Add(CountryDTO country)
         {
-            using var conn = new SqlConnection(Connection.ConnectionString);
+            using var conn = new SqlConnection(Connection.DBConnectionString);
 
             string query = @"INSERT INTO Countries (CountryName)
                             VALUES 
@@ -114,7 +114,7 @@ namespace DVLD.DAL.Data
         }
         public static int Update(CountryDTO country)
         {
-            using var conn = new SqlConnection(Connection.ConnectionString);
+            using var conn = new SqlConnection(Connection.DBConnectionString);
 
             string query = @"UPDATE Countries 
                             SET
@@ -144,7 +144,7 @@ namespace DVLD.DAL.Data
         }
         public static int Delete(int iD)
         {
-            using var conn = new SqlConnection(Connection.ConnectionString);
+            using var conn = new SqlConnection(Connection.DBConnectionString);
 
             string query = @"DELETE FROM Countries
                             WHERE ID = @ID;";
@@ -172,7 +172,7 @@ namespace DVLD.DAL.Data
         }
         public static DataTable GetAll()
         {
-            using var conn = new SqlConnection(Connection.ConnectionString);
+            using var conn = new SqlConnection(Connection.DBConnectionString);
 
             string query = @"SELECT * FROM Countries;";
 
@@ -203,7 +203,7 @@ namespace DVLD.DAL.Data
 
         public static List<string> GetAllCountryNames()
         {
-            using var conn = new SqlConnection(Connection.ConnectionString);
+            using var conn = new SqlConnection(Connection.DBConnectionString);
 
             string query = @"SELECT CountryName FROM Countries;";
 
@@ -233,7 +233,7 @@ namespace DVLD.DAL.Data
         }
         public static bool IsExist(int iD)
         {
-            using var conn = new SqlConnection(Connection.ConnectionString);
+            using var conn = new SqlConnection(Connection.DBConnectionString);
 
             string query = @"SELECT 1 FROM Countries
                             WHERE ID = @ID;";

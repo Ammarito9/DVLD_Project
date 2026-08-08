@@ -12,7 +12,7 @@ namespace DVLD.DAL.Data
     {
         public static DataTable GetByID(int ID)
         {
-            using var conn = new SqlConnection(Connection.ConnectionString);
+            using var conn = new SqlConnection(Connection.DBConnectionString);
 
             DataTable dt = new DataTable();
 
@@ -48,7 +48,7 @@ WHERE ID = @ID;";
         }
         public static DataTable GetByPersonID(int ID)
         {
-            using var conn = new SqlConnection(Connection.ConnectionString);
+            using var conn = new SqlConnection(Connection.DBConnectionString);
 
             DataTable dt = new DataTable();
 
@@ -86,7 +86,7 @@ WHERE p.ID = @ID;";
         }
         public static DataTable GetFiltered(string filter, string search)
         {
-            using var conn = new SqlConnection(Connection.ConnectionString);
+            using var conn = new SqlConnection(Connection.DBConnectionString);
             string WhereClause = "";
 
             switch (filter)
@@ -147,7 +147,7 @@ WHERE {WhereClause};";
         }
         public static DataTable GetDriverInternationalLicenseInfo(int ID)
         {
-            using var conn = new SqlConnection(Connection.ConnectionString);
+            using var conn = new SqlConnection(Connection.DBConnectionString);
 
             DataTable dt = new DataTable();
 
@@ -201,7 +201,7 @@ WHERE il.ID = @ID;";
 
         public static DataTable GetAll()
         {
-            using var conn = new SqlConnection(Connection.ConnectionString);
+            using var conn = new SqlConnection(Connection.DBConnectionString);
 
             DataTable dt = new DataTable();
 
@@ -234,7 +234,7 @@ FROM InternationalLicenses;";
         }
         public static int Add(int driverID, int applicationID, int issuedUsingLocalLicenseID, int createdByUserID, DateTime issueDate, DateTime expiryDate, bool isActive)
         {
-            using var conn = new SqlConnection(Connection.ConnectionString);
+            using var conn = new SqlConnection(Connection.DBConnectionString);
 
             string query = @"
 INSERT INTO InternationalLicenses
@@ -275,7 +275,7 @@ SELECT SCOPE_IDENTITY();";
         }
         public static bool IsExist(int iD)
         {
-            using var conn = new SqlConnection(Connection.ConnectionString);
+            using var conn = new SqlConnection(Connection.DBConnectionString);
 
             string query = @"SELECT 1 FROM InternationalLicenses
                             WHERE ID = @ID;";
@@ -302,7 +302,7 @@ SELECT SCOPE_IDENTITY();";
         }
         public static bool DoesPersonHasInternationalLicense(int personID)
         {
-            using var conn = new SqlConnection(Connection.ConnectionString);
+            using var conn = new SqlConnection(Connection.DBConnectionString);
 
             string query = @"
 SELECT 

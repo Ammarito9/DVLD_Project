@@ -139,6 +139,7 @@
             Controls.Add(lblCurrentPassword);
             Name = "ChangePassword";
             Text = "ChangePassword";
+            Load += ChangePassword_Load;
             ((System.ComponentModel.ISupportInitialize)ep_HandleEmptyTestBox).EndInit();
             ((System.ComponentModel.ISupportInitialize)ep_PasswordDoesNotMatch).EndInit();
             ResumeLayout(false);

@@ -11,7 +11,7 @@ namespace DVLD.DAL.Data
     {
         public static int Add(LocalDrivingLicenseApplicationDTO localDrivingLicenseApplication)
         {
-            using var conn = new SqlConnection(Connection.ConnectionString);
+            using var conn = new SqlConnection(Connection.DBConnectionString);
 
             string query = @"INSERT INTO LocalDrivingLicenseApplications
                             (LicenseClassID, ApplicationID)
@@ -46,7 +46,7 @@ namespace DVLD.DAL.Data
         }
         public static bool CheckIfPersonHasApplicationForLicenseClassExist(int personID, int licenseClassID)
         {
-            using var conn = new SqlConnection(Connection.ConnectionString);
+            using var conn = new SqlConnection(Connection.DBConnectionString);
 
             string query = @"SELECT 1 FROM LocalDrivingLicenseApplications l
                             JOIN Applications a ON l.ApplicationID = a.ID
@@ -76,7 +76,7 @@ namespace DVLD.DAL.Data
         // The query here is not working correctly probably check it later.
         public static bool CheckIfPersonHasLicenseForLicenseClass(int personID, int licenseClassID)
         {
-            using var conn = new SqlConnection(Connection.ConnectionString);
+            using var conn = new SqlConnection(Connection.DBConnectionString);
 
             string query = @"SELECT 1 FROM LocalDrivingLicenseApplications l
                             JOIN Applications a ON l.ApplicationID = a.ID
@@ -106,7 +106,7 @@ namespace DVLD.DAL.Data
 
         public static DataTable GetAll()
         {
-            using var conn = new SqlConnection(Connection.ConnectionString);
+            using var conn = new SqlConnection(Connection.DBConnectionString);
 
             string query = @"
 SELECT 
@@ -163,7 +163,7 @@ GROUP BY
         }
         public static DataTable GetByID(int ID)
         {
-            using var conn = new SqlConnection(Connection.ConnectionString);
+            using var conn = new SqlConnection(Connection.DBConnectionString);
 
             string query = @"SELECT * FROM LocalDrivingLicenseApplications
                             WHERE ID = @ID;";
@@ -195,7 +195,7 @@ GROUP BY
         }
         public static DataTable GetByIDDetailed(int ID)
         {
-            using var conn = new SqlConnection(Connection.ConnectionString);
+            using var conn = new SqlConnection(Connection.DBConnectionString);
 
             string query = @"SELECT l.ID, a.PersonID, CONCAT_WS(' ',p.FirstName, p.SecondName, p.ThirdName, p.LastName) AS Fullname, lc.ClassName,l.ApplicationID, l.LicenseClassID 
                             FROM LocalDrivingLicenseApplications l
@@ -232,7 +232,7 @@ GROUP BY
 
         public static DataTable GetAllFilterByStatus(int StatusID)
         {
-            using var conn = new SqlConnection(Connection.ConnectionString);
+            using var conn = new SqlConnection(Connection.DBConnectionString);
 
             string query = @"
 SELECT 
@@ -291,7 +291,7 @@ GROUP BY
         }
         public static DataTable GetAllFilterBy(string filter, string search)
         {
-            using var conn = new SqlConnection(Connection.ConnectionString);
+            using var conn = new SqlConnection(Connection.DBConnectionString);
             string WhereClause = "";
 
             switch (filter)
@@ -376,7 +376,7 @@ GROUP BY
         }
         public static int Delete(int ID)
         {
-            using var conn = new SqlConnection(Connection.ConnectionString);
+            using var conn = new SqlConnection(Connection.DBConnectionString);
 
             string query = @"DELETE FROM LocalDrivingLicenseApplications 
 WHERE ID = @ID";
@@ -403,7 +403,7 @@ WHERE ID = @ID";
         }
         public static int CancelApplication(int ID)
         {
-            using var conn = new SqlConnection(Connection.ConnectionString);
+            using var conn = new SqlConnection(Connection.DBConnectionString);
 
             string query = @"UPDATE Applications
                             SET
@@ -434,7 +434,7 @@ WHERE ID = @ID";
         }
         public static int GetNumberOfPassedTests(int applicationID)
         {
-            using var conn = new SqlConnection(Connection.ConnectionString);
+            using var conn = new SqlConnection(Connection.DBConnectionString);
 
             string query = @"SELECT COUNT(t.TestResult) FROM LocalDrivingLicenseApplications l
 	JOIN TestAppointments ta ON ta.LocalDrivingLicenseApplicationID = l.ID

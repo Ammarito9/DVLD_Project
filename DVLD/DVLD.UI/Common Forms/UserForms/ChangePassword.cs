@@ -13,14 +13,11 @@ namespace DVLD.UI.Common_Forms.UserForms
 {
     public partial class ChangePassword : Form
     {
+        User user;
         private int Id;
-        public ChangePassword()
+        public ChangePassword(int ID)
         {
             InitializeComponent();
-        }
-
-        public ChangePassword(int ID) : this()
-        {
             Id = ID;
 
             InitializeUserInfo();
@@ -88,7 +85,7 @@ namespace DVLD.UI.Common_Forms.UserForms
 
         private void txt_ConfirmPasswordValue_Leave(object sender, EventArgs e)
         {
-             HandleEmptyTextBox(txt_ConfirmPasswordValue);
+            HandleEmptyTextBox(txt_ConfirmPasswordValue);
         }
 
         private void btn_Save_Click_1(object sender, EventArgs e)
@@ -96,10 +93,9 @@ namespace DVLD.UI.Common_Forms.UserForms
             if (!IsChangingPasswordValid())
                 return;
 
-            
-            CurrentUser.LoggedInUser.Password = txt_ConfirmPasswordValue.Text;
+            user.Password = txt_ConfirmPasswordValue.Text;
 
-            if (CurrentUser.LoggedInUser.Save())
+            if (user.Save())
             {
                 MessageBox.Show("Password updated successfully!");
             }
@@ -107,7 +103,12 @@ namespace DVLD.UI.Common_Forms.UserForms
             {
                 MessageBox.Show("Error! Password did NOT update.");
             }
-            
+
+        }
+
+        private void ChangePassword_Load(object sender, EventArgs e)
+        {
+            user = User.Find(Id);
         }
     }
 }

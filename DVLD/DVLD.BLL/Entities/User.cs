@@ -122,14 +122,21 @@ namespace DVLD.BLL.Entities
             User user = new User();
             user = Find(username);
 
-            if (user.IsActive == false) user.IsActive = false;
-            if (user.Password != password) user.Password = String.Empty;
+            if (user is null)
+                return null;
+
+            if (user.IsActive == false) 
+                user.IsActive = false;
+            if (user.Password != password) 
+                user.Password = String.Empty;
 
             return user;
         }
 
+        [Obsolete]
         public static void AddCredentialsToRememberMe(string UserName) => FileDataAccess.WriteToFile(PathOfRememberMeFile, UserName);
 
+        [Obsolete]
         public static User GetCredentialsFromRememberMe()
         {
             List<string> ls = FileDataAccess.ReadFromFile(PathOfRememberMeFile);
@@ -145,6 +152,21 @@ namespace DVLD.BLL.Entities
             }
 
             return null;
+        }
+        public static void StoreUserCredentials(string username, string password) => Util.StoreUserCredentialsToRegistry(username, password);
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns>It return a filled object if found; other ways null</returns>
+        public static User? GetStoredUserCredentials()
+        {
+            string[]? userCredentials = Util.GetUserCredentialsFromRegistry();
+
+            if (userCredentials is null)
+                return null;
+
+            User user = Find(userCredentials[0]); // Find by username
+            return user;
         }
 
         public static bool DoesPersonIdConnectedToUser(int Id) => UserData.DoesPersonIdConnectedToUser(Id);

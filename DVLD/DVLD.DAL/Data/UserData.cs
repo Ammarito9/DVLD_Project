@@ -17,7 +17,7 @@ namespace DVLD.DAL.Data
 
         public static DataTable GetByID(int ID)
         {
-            using var conn = new SqlConnection(Connection.ConnectionString);
+            using var conn = new SqlConnection(Connection.DBConnectionString);
 
             string query = @"SELECT * FROM Users WHERE ID = @ID;";
 
@@ -48,7 +48,7 @@ namespace DVLD.DAL.Data
         }
         public static DataTable GetByUsername(string Username)
         {
-            using var conn = new SqlConnection(Connection.ConnectionString);
+            using var conn = new SqlConnection(Connection.DBConnectionString);
 
             string query = @"SELECT * FROM Users WHERE Username = @Username;";
 
@@ -80,7 +80,7 @@ namespace DVLD.DAL.Data
 
         public static int Add(UserDTO user)
         {
-            using var conn = new SqlConnection(Connection.ConnectionString);
+            using var conn = new SqlConnection(Connection.DBConnectionString);
 
             string query = @"INSERT INTO Users (UserName, Password, PersonID, Permissions, IsActive)
                             VALUES
@@ -116,7 +116,7 @@ namespace DVLD.DAL.Data
         }
         public static int Update(UserDTO user)
         {
-            using var conn = new SqlConnection(Connection.ConnectionString);
+            using var conn = new SqlConnection(Connection.DBConnectionString);
 
             string query = @"UPDATE Users
                             SET
@@ -153,7 +153,7 @@ namespace DVLD.DAL.Data
         }
         public static int Delete(int ID)
         {
-            using var conn = new SqlConnection(Connection.ConnectionString);
+            using var conn = new SqlConnection(Connection.DBConnectionString);
 
             string query = @"DELETE FROM Users
                             WHERE ID = @ID";
@@ -179,7 +179,7 @@ namespace DVLD.DAL.Data
         }
         public static DataTable GetAll()
         {
-            using var conn = new SqlConnection(Connection.ConnectionString);
+            using var conn = new SqlConnection(Connection.DBConnectionString);
 
             string query = @"SELECT u.ID, u.PersonID, p.FirstName + ' ' + p.LastName as FullName, u.Username, u.IsActive FROM Users u
                             JOIN Persons p on u.PersonID = p.ID";
@@ -211,7 +211,7 @@ namespace DVLD.DAL.Data
 
         public static DataTable GetAllFiltered(String filter, String filterValue)
         {
-            using var conn = new SqlConnection(Connection.ConnectionString);
+            using var conn = new SqlConnection(Connection.DBConnectionString);
 
             string query = "", WhereClause = "";
 
@@ -269,7 +269,7 @@ namespace DVLD.DAL.Data
         }
         public static bool IsExist(int ID)
         {
-            using var conn = new SqlConnection(Connection.ConnectionString);
+            using var conn = new SqlConnection(Connection.DBConnectionString);
 
             string query = @"SELECT 1 FROM Users 
                             WHERE ID = @ID";
@@ -296,7 +296,7 @@ namespace DVLD.DAL.Data
 
         public static bool IsExist(String Username)
         {
-            using var conn = new SqlConnection(Connection.ConnectionString);
+            using var conn = new SqlConnection(Connection.DBConnectionString);
 
             string query = @"SELECT 1 FROM Users 
                             WHERE Username = @Username";
@@ -323,7 +323,7 @@ namespace DVLD.DAL.Data
 
         public static bool DoesPersonIdConnectedToUser(int id)
         {
-            using var conn = new SqlConnection(Connection.ConnectionString);
+            using var conn = new SqlConnection(Connection.DBConnectionString);
 
             string query = @"
                                 SELECT 1 FROM Users u

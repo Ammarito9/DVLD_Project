@@ -10,7 +10,7 @@ namespace DVLD.DAL.Data
     {
         public static DataTable GetAll()
         {
-            using var conn = new SqlConnection(Connection.ConnectionString);
+            using var conn = new SqlConnection(Connection.DBConnectionString);
 
             DataTable dt = new DataTable();
 
@@ -41,7 +41,7 @@ namespace DVLD.DAL.Data
         }
         public static List<string> GetAllClassNames()
         {
-            using var conn = new SqlConnection(Connection.ConnectionString);
+            using var conn = new SqlConnection(Connection.DBConnectionString);
 
             var ClassNames = new List<string>();
 
@@ -70,7 +70,7 @@ namespace DVLD.DAL.Data
         }
         public static DataTable GetByID(int ID)
         {
-            using var conn = new SqlConnection(Connection.ConnectionString);
+            using var conn = new SqlConnection(Connection.DBConnectionString);
 
             DataTable dt = new DataTable();
 

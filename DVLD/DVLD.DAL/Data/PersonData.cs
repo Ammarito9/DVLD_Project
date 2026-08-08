@@ -19,7 +19,7 @@ namespace DVLD.DAL.Data
         }
         public static DataTable GetByID(int iD)
         {
-            using var conn = new SqlConnection(Connection.ConnectionString);
+            using var conn = new SqlConnection(Connection.DBConnectionString);
 
             DataTable dt = new DataTable();
 
@@ -52,7 +52,7 @@ namespace DVLD.DAL.Data
 
         public static string GetPersonNationalityNameByID(int ID)
         {
-            using var conn = new SqlConnection(Connection.ConnectionString);
+            using var conn = new SqlConnection(Connection.DBConnectionString);
 
 
             string query = @"SELECT c.CountryName FROM Persons p
@@ -84,7 +84,7 @@ namespace DVLD.DAL.Data
         }
         public static DataTable GetByNationalNumber(string nationalNumber)
         {
-            using var conn = new SqlConnection(Connection.ConnectionString);
+            using var conn = new SqlConnection(Connection.DBConnectionString);
 
             DataTable dt = new DataTable();
 
@@ -118,7 +118,7 @@ namespace DVLD.DAL.Data
         //Returns the newly created ID
         public static int Add(PersonDTO person)
         {
-            using var conn = new SqlConnection(Connection.ConnectionString);
+            using var conn = new SqlConnection(Connection.DBConnectionString);
 
             string query = @"INSERT INTO Persons(NationalityCountryID, NationalNumber, FirstName, SecondName, ThirdName, LastName, Address, DateOfBirth, Email, Gender, PhoneNumber, PersonalPhotoPath)
                             VALUES
@@ -163,7 +163,7 @@ namespace DVLD.DAL.Data
         //Returns the number of rows effected!
         public static int Update(PersonDTO person)
         {
-            using var conn = new SqlConnection(Connection.ConnectionString);
+            using var conn = new SqlConnection(Connection.DBConnectionString);
 
             string query = @"UPDATE Persons
                             SET 
@@ -216,7 +216,7 @@ namespace DVLD.DAL.Data
 
         public static int Delete(int iD)
         {
-            using var conn = new SqlConnection(Connection.ConnectionString);
+            using var conn = new SqlConnection(Connection.DBConnectionString);
 
             string query = @"DELETE FROM Persons
                             WHERE ID = @ID;";
@@ -244,7 +244,7 @@ namespace DVLD.DAL.Data
 
         public static DataTable GetAll()
         {
-            using var conn = new SqlConnection(Connection.ConnectionString);
+            using var conn = new SqlConnection(Connection.DBConnectionString);
 
             DataTable dt = new DataTable();
 
@@ -277,7 +277,7 @@ namespace DVLD.DAL.Data
 
         public static DataTable GetAllFilterBy(string filter,string filterBy, bool isLikeStatement)
         {
-            using var conn = new SqlConnection(Connection.ConnectionString);
+            using var conn = new SqlConnection(Connection.DBConnectionString);
 
             DataTable dt = new DataTable();
 
@@ -321,7 +321,7 @@ namespace DVLD.DAL.Data
 
         public static bool IsExist(int iD)
         {
-            using var conn = new SqlConnection(Connection.ConnectionString);
+            using var conn = new SqlConnection(Connection.DBConnectionString);
 
             string query = @"SELECT 1 FROM Persons
                             WHERE ID = @ID;";
@@ -349,7 +349,7 @@ namespace DVLD.DAL.Data
 
         public static bool IsExist(string NationalNumber, int IdForUpdate)
         {
-            using var conn = new SqlConnection(Connection.ConnectionString);
+            using var conn = new SqlConnection(Connection.DBConnectionString);
 
             string query = "";
 

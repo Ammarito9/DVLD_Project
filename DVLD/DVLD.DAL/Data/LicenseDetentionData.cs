@@ -11,7 +11,7 @@ namespace DVLD.DAL.Data
     {
         public static DataTable GetByID(int ID)
         {
-            using var conn = new SqlConnection(Connection.ConnectionString);
+            using var conn = new SqlConnection(Connection.DBConnectionString);
 
             DataTable dt = new DataTable();
 
@@ -45,7 +45,7 @@ WHERE ld.ID = @ID;";
         }
         public static DataTable GetByLicenseID(int licenseID)
         {
-            using var conn = new SqlConnection(Connection.ConnectionString);
+            using var conn = new SqlConnection(Connection.DBConnectionString);
 
             DataTable dt = new DataTable();
 
@@ -79,7 +79,7 @@ WHERE ld.LicenseID = @licenseID AND ld.IsReleased = 0;";
         }
         public static DataTable GetAll()
         {
-            using var conn = new SqlConnection(Connection.ConnectionString);
+            using var conn = new SqlConnection(Connection.DBConnectionString);
 
             DataTable dt = new DataTable();
 
@@ -146,7 +146,7 @@ SELECT * FROM LicenseDetentions ld;";
                     whereClause = "1 = @search";
                     break;
             }
-            using var conn = new SqlConnection(Connection.ConnectionString);
+            using var conn = new SqlConnection(Connection.DBConnectionString);
 
             DataTable dt = new DataTable();
 
@@ -192,7 +192,7 @@ WHERE {whereClause};";
 
         public static int Add(int LicenseID,int? ReleaseApplicationID, int? ReleasedByUserID, int CreatedByUserID,Decimal DetainFee,DateTime DateOfDetain,DateTime? ReleaseDate,bool IsReleased)
         {
-            using var conn = new SqlConnection(Connection.ConnectionString);
+            using var conn = new SqlConnection(Connection.DBConnectionString);
 
             string query = @"
 INSERT INTO LicenseDetentions
@@ -265,7 +265,7 @@ SELECT SCOPE_IDENTITY();";
         }
         public static int Update(int ID, int LicenseID, int? ReleaseApplicationID, int? ReleasedByUserID, int CreatedByUserID, Decimal DetainFee, DateTime DateOfDetain, DateTime? ReleaseDate, bool IsReleased)
         {
-            using var conn = new SqlConnection(Connection.ConnectionString);
+            using var conn = new SqlConnection(Connection.DBConnectionString);
 
             string query = @"
 UPDATE LicenseDetentions
@@ -325,7 +325,7 @@ WHERE ID = @ID;";
         }
         public static int Delete(int iD)
         {
-            using var conn = new SqlConnection(Connection.ConnectionString);
+            using var conn = new SqlConnection(Connection.DBConnectionString);
 
             string query = @"DELETE FROM LicenseDetentions
                             WHERE ID = @ID;";
@@ -352,7 +352,7 @@ WHERE ID = @ID;";
         }
         public static bool IsExist(int iD)
         {
-            using var conn = new SqlConnection(Connection.ConnectionString);
+            using var conn = new SqlConnection(Connection.DBConnectionString);
 
             string query = @"SELECT 1 FROM LicenseDetentions
                             WHERE ID = @ID;";

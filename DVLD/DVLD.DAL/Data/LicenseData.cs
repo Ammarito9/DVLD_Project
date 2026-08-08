@@ -11,7 +11,7 @@ namespace DVLD.DAL.Data
     {
         public static DataTable GetByID(int ID)
         {
-            using var conn = new SqlConnection(Connection.ConnectionString);
+            using var conn = new SqlConnection(Connection.DBConnectionString);
 
             DataTable dt = new DataTable();
 
@@ -49,7 +49,7 @@ namespace DVLD.DAL.Data
         }
         public static DataTable GetLicense(string nationalNumber, int licenseClassID)
         {
-            using var conn = new SqlConnection(Connection.ConnectionString);
+            using var conn = new SqlConnection(Connection.DBConnectionString);
 
             DataTable dt = new DataTable();
 
@@ -96,7 +96,7 @@ WHERE p.NationalNumber = @NationalNumber AND lc.ID = @LicenseClassID AND l.IsAct
 
         public static DataRow? GetLicenseInfoDetailed(int licenseID)
         {
-            using var conn = new SqlConnection(Connection.ConnectionString);
+            using var conn = new SqlConnection(Connection.DBConnectionString);
 
             DataTable dt = new DataTable();
 
@@ -159,7 +159,7 @@ WHERE l.ID = @ID;"; // I have deleted this ( AND l.IsActive = 1) from this line.
         }
         public static DataTable GetAll()
         {
-            using var conn = new SqlConnection(Connection.ConnectionString);
+            using var conn = new SqlConnection(Connection.DBConnectionString);
 
             DataTable dt = new DataTable();
 
@@ -194,7 +194,7 @@ WHERE l.ID = @ID;"; // I have deleted this ( AND l.IsActive = 1) from this line.
         }
         public static int Add(LicenseDTO license)
         {
-            using var conn = new SqlConnection(Connection.ConnectionString);
+            using var conn = new SqlConnection(Connection.DBConnectionString);
 
             string query = @"INSERT INTO Licenses
                             (DriverID, LicenseClassID, LicenseTypeID, CreatedByUserID, ApplicationID, IssueDate, ExpiryDate, IsActive, LicenseNumber, LicenseNote, PaidFee)
@@ -241,7 +241,7 @@ WHERE l.ID = @ID;"; // I have deleted this ( AND l.IsActive = 1) from this line.
         }
         public static int Update(LicenseDTO license)
         {
-            using var conn = new SqlConnection(Connection.ConnectionString);
+            using var conn = new SqlConnection(Connection.DBConnectionString);
 
             string query = @"UPDATE Licenses 
                             SET
@@ -294,7 +294,7 @@ WHERE l.ID = @ID;"; // I have deleted this ( AND l.IsActive = 1) from this line.
         }
         public static int Delete(int iD)
         {
-            using var conn = new SqlConnection(Connection.ConnectionString);
+            using var conn = new SqlConnection(Connection.DBConnectionString);
 
             string query = @"DELETE FROM Licenses
                             WHERE ID = @ID;";
@@ -321,7 +321,7 @@ WHERE l.ID = @ID;"; // I have deleted this ( AND l.IsActive = 1) from this line.
         }
         public static bool IsExist(int iD)
         {
-            using var conn = new SqlConnection(Connection.ConnectionString);
+            using var conn = new SqlConnection(Connection.DBConnectionString);
 
             string query = @"SELECT 1 FROM Licenses
                             WHERE ID = @ID;";

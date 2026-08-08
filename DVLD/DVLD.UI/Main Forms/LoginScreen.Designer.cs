@@ -61,7 +61,7 @@
             txtUsername.Name = "txtUsername";
             txtUsername.Size = new Size(285, 27);
             txtUsername.TabIndex = 1;
-            txtUsername.MouseLeave += txtUsername_MouseLeave;
+            txtUsername.Validating += txtUsername_Validating;
             // 
             // lblUsername
             // 
@@ -90,6 +90,7 @@
             txtPassword.PasswordChar = '*';
             txtPassword.Size = new Size(285, 27);
             txtPassword.TabIndex = 5;
+            txtPassword.Validating += txtPassword_Validating;
             // 
             // btnLogin
             // 
@@ -104,6 +105,8 @@
             // chkRememberMe
             // 
             chkRememberMe.AutoSize = true;
+            chkRememberMe.Checked = true;
+            chkRememberMe.CheckState = CheckState.Checked;
             chkRememberMe.Location = new Point(184, 287);
             chkRememberMe.Name = "chkRememberMe";
             chkRememberMe.Size = new Size(129, 24);
@@ -165,6 +168,7 @@
             Name = "LoginScreen";
             ShowIcon = false;
             ShowInTaskbar = false;
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "LoginScreen";
             ((System.ComponentModel.ISupportInitialize)pbUsername).EndInit();
             ((System.ComponentModel.ISupportInitialize)pbPassword).EndInit();

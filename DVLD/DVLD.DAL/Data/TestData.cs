@@ -11,7 +11,7 @@ namespace DVLD.DAL.Data
     {
         public static DataRow GetByID(int ID)
         {
-            using var conn = new SqlConnection(Connection.ConnectionString);
+            using var conn = new SqlConnection(Connection.DBConnectionString);
 
             string query = @"SELECT * FROM Tests
                             WHERE ID = @ID;";
@@ -42,7 +42,7 @@ namespace DVLD.DAL.Data
         }
         public static DataTable GetAll()
         {
-            using var conn = new SqlConnection(Connection.ConnectionString);
+            using var conn = new SqlConnection(Connection.DBConnectionString);
 
             string query = @"SELECT * FROM Tests;";
 
@@ -71,7 +71,7 @@ namespace DVLD.DAL.Data
         }
         public static int Add(TestDTO TestDTO)
         {
-            using var conn = new SqlConnection(Connection.ConnectionString);
+            using var conn = new SqlConnection(Connection.DBConnectionString);
 
             string query = @"INSERT INTO Tests(TestAppointmentID, CreatedByUserID, TestResult, Notes)
                             VALUES (@TestAppointmentID, @CreatedByUserID, @TestResult, @Notes);
@@ -106,7 +106,7 @@ namespace DVLD.DAL.Data
         }
         public static int Update(TestDTO TestDTO)
         {
-            using var conn = new SqlConnection(Connection.ConnectionString);
+            using var conn = new SqlConnection(Connection.DBConnectionString);
 
             string query = @"UPDATE Tests 
                             SET
@@ -142,7 +142,7 @@ namespace DVLD.DAL.Data
         }
         public static int Delete(int iD)
         {
-            using var conn = new SqlConnection(Connection.ConnectionString);
+            using var conn = new SqlConnection(Connection.DBConnectionString);
 
             string query = @"DELETE FROM Tests
                             WHERE ID = @ID;";
@@ -169,7 +169,7 @@ namespace DVLD.DAL.Data
         }
         public static bool IsExist(int iD)
         {
-            using var conn = new SqlConnection(Connection.ConnectionString);
+            using var conn = new SqlConnection(Connection.DBConnectionString);
 
             string query = @"SELECT 1 FROM Tests
                             WHERE ID = @ID;";

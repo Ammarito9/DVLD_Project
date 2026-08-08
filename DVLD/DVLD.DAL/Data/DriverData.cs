@@ -6,7 +6,7 @@ namespace DVLD.DAL.Data
     {
         public static DataTable GetAll()
         {
-            using var conn = new SqlConnection(Connection.ConnectionString);
+            using var conn = new SqlConnection(Connection.DBConnectionString);
 
             string query = @"SELECT * FROM Drivers;";
 
@@ -36,7 +36,7 @@ namespace DVLD.DAL.Data
         }
         public static DataTable GetByID(int ID)
         {
-            using var conn = new SqlConnection(Connection.ConnectionString);
+            using var conn = new SqlConnection(Connection.DBConnectionString);
 
             string query = @"SELECT * FROM Drivers
                             WHERE ID = @ID;";
@@ -68,7 +68,7 @@ namespace DVLD.DAL.Data
         }
         public static DataTable GetDriverLocalLicenses(int driverID)
         {
-            using var conn = new SqlConnection(Connection.ConnectionString);
+            using var conn = new SqlConnection(Connection.DBConnectionString);
 
             string query = @"
 SELECT l.ID, l.ApplicationID, lc.ClassName, l.IssueDate, l.ExpiryDate, l.IsActive FROM Licenses l
@@ -103,7 +103,7 @@ WHERE d.ID = @ID;";
         }
         public static DataTable GetDriverInternationalLicenses(int driverID)
         {
-            using var conn = new SqlConnection(Connection.ConnectionString);
+            using var conn = new SqlConnection(Connection.DBConnectionString);
 
             string query = @"
 SELECT 
@@ -145,7 +145,7 @@ WHERE d.ID = @ID;";
         }
         public static DataTable GetDriverFiltered(string filter, string search)
         {
-            using var conn = new SqlConnection(Connection.ConnectionString);
+            using var conn = new SqlConnection(Connection.DBConnectionString);
             string WhereClause = "";
 
             switch (filter)
@@ -219,7 +219,7 @@ GROUP BY
 
         public static DataTable GetByPersonID(int personID)
         {
-            using var conn = new SqlConnection(Connection.ConnectionString);
+            using var conn = new SqlConnection(Connection.DBConnectionString);
 
             string query = @"SELECT * FROM Drivers
                             WHERE PersonID = @ID;";
@@ -252,7 +252,7 @@ GROUP BY
 
         public static int Add(DriverDTO driver)
         {
-            using var conn = new SqlConnection(Connection.ConnectionString);
+            using var conn = new SqlConnection(Connection.DBConnectionString);
 
             string query = @"INSERT INTO Drivers
                             (PersonID, CreatedByUserID, CreateDate) 
@@ -288,7 +288,7 @@ GROUP BY
         }
         public static int Update(DriverDTO driver)
         {
-            using var conn = new SqlConnection(Connection.ConnectionString);
+            using var conn = new SqlConnection(Connection.DBConnectionString);
 
             string query = @"UPDATE Drivers
                             SET
@@ -322,7 +322,7 @@ GROUP BY
         }
         public static int Delete(int ID)
         {
-            using var conn = new SqlConnection(Connection.ConnectionString);
+            using var conn = new SqlConnection(Connection.DBConnectionString);
 
             string query = @"DELETE FROM Drivers
                             WHERE ID = @ID";
@@ -349,7 +349,7 @@ GROUP BY
         }
         public static bool IsExist(int ID)
         {
-            using var conn = new SqlConnection(Connection.ConnectionString);
+            using var conn = new SqlConnection(Connection.DBConnectionString);
 
             string query = @"SELECT * FROM Drivers
                             WHERE ID = @ID";
@@ -376,7 +376,7 @@ GROUP BY
         }
         public static bool DoesPersonHasDriverEntry(int ID)
         {
-            using var conn = new SqlConnection(Connection.ConnectionString);
+            using var conn = new SqlConnection(Connection.DBConnectionString);
 
             string query = @"SELECT * FROM Drivers
                             WHERE PersonID = @ID";

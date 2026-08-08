@@ -11,7 +11,7 @@ namespace DVLD.DAL.Data
     {
         public static DataTable GetByID(int ID)
         {
-            using var conn = new SqlConnection(Connection.ConnectionString);
+            using var conn = new SqlConnection(Connection.DBConnectionString);
 
             string query = @"SELECT * FROM TestTypes WHERE ID = @ID;";
 
@@ -42,7 +42,7 @@ namespace DVLD.DAL.Data
         }
         public static int Update(TestTypeDTO TestType)
         {
-            using var conn = new SqlConnection(Connection.ConnectionString);
+            using var conn = new SqlConnection(Connection.DBConnectionString);
 
             string query = @"UPDATE TestTypes
                             SET
@@ -75,7 +75,7 @@ namespace DVLD.DAL.Data
         }
         public static DataTable GetAll()
         {
-            using var conn = new SqlConnection(Connection.ConnectionString);
+            using var conn = new SqlConnection(Connection.DBConnectionString);
 
             string query = @"SELECT * FROM TestTypes;";
 
@@ -105,7 +105,7 @@ namespace DVLD.DAL.Data
         }
         public static bool IsExist(int ID)
         {
-            using var conn = new SqlConnection(Connection.ConnectionString);
+            using var conn = new SqlConnection(Connection.DBConnectionString);
 
             string query = @"SELECT 1 FROM TestTypes
                             WHERE ID = @ID;";
