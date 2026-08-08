@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DVLD.DAL;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -33,11 +34,11 @@ namespace DVLD.DAL.Data
             }
             catch (SqlException ex)
             {
-                throw new Exception("Error Occurred from the database!", ex);
+                Logger.Log(ex.Message, Logger.LogEntryType.Error);
             }
             catch (Exception ex)
             {
-                throw new Exception("Error Occurred in DAL!", ex);
+                Logger.Log(ex.Message, Logger.LogEntryType.Error);
             }
 
         }
@@ -64,11 +65,11 @@ namespace DVLD.DAL.Data
             }
             catch (SqlException ex)
             {
-                throw new Exception("Error Occurred from the database!", ex);
+                Logger.Log(ex.Message, Logger.LogEntryType.Error);
             }
             catch (Exception ex)
             {
-                throw new Exception("Error Occurred in DAL!", ex);
+                Logger.Log(ex.Message, Logger.LogEntryType.Error);
             }
         }
     }

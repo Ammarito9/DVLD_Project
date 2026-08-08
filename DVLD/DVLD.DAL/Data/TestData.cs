@@ -33,11 +33,11 @@ namespace DVLD.DAL.Data
             }
             catch (SqlException ex)
             {
-                throw new Exception("Error Occurred from the database!", ex);
+                Logger.Log(ex.Message, Logger.LogEntryType.Error);
             }
             catch (Exception ex)
             {
-                throw new Exception("Error Occurred in DAL!", ex);
+                Logger.Log(ex.Message, Logger.LogEntryType.Error);
             }
         }
         public static DataTable GetAll()
@@ -62,11 +62,11 @@ namespace DVLD.DAL.Data
             }
             catch (SqlException ex)
             {
-                throw new Exception("Error Occurred from the database!", ex);
+                Logger.Log(ex.Message, Logger.LogEntryType.Error);
             }
             catch (Exception ex)
             {
-                throw new Exception("Error Occurred in DAL!", ex);
+                Logger.Log(ex.Message, Logger.LogEntryType.Error);
             }
         }
         public static int Add(TestDTO TestDTO)
@@ -97,11 +97,11 @@ namespace DVLD.DAL.Data
             }
             catch (SqlException ex)
             {
-                throw new Exception("Error Occurred from the database!", ex);
+                Logger.Log(ex.Message, Logger.LogEntryType.Error);
             }
             catch (Exception ex)
             {
-                throw new Exception("Error Occurred in DAL!", ex);
+                Logger.Log(ex.Message, Logger.LogEntryType.Error);
             }
         }
         public static int Update(TestDTO TestDTO)
@@ -133,11 +133,11 @@ namespace DVLD.DAL.Data
             }
             catch (SqlException ex)
             {
-                throw new Exception("Error Occurred from the database!", ex);
+                Logger.Log(ex.Message, Logger.LogEntryType.Error);
             }
             catch (Exception ex)
             {
-                throw new Exception("Error Occurred in DAL!", ex);
+                Logger.Log(ex.Message, Logger.LogEntryType.Error);
             }
         }
         public static int Delete(int iD)
@@ -160,11 +160,11 @@ namespace DVLD.DAL.Data
             }
             catch (SqlException ex)
             {
-                throw new Exception("Error Occurred from the database!", ex);
+                Logger.Log(ex.Message, Logger.LogEntryType.Error);
             }
             catch (Exception ex)
             {
-                throw new Exception("Error Occurred in DAL!", ex);
+                Logger.Log(ex.Message, Logger.LogEntryType.Error);
             }
         }
         public static bool IsExist(int iD)
@@ -186,11 +186,11 @@ namespace DVLD.DAL.Data
             }
             catch (SqlException ex)
             {
-                throw new Exception("Error Occurred from the database!", ex);
+                Logger.Log(ex.Message, Logger.LogEntryType.Error);
             }
             catch (Exception ex)
             {
-                throw new Exception("Error Occurred in DAL!", ex);
+                Logger.Log(ex.Message, Logger.LogEntryType.Error);
             }
         }
     }

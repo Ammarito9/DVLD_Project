@@ -37,11 +37,11 @@ namespace DVLD.DAL.Data
             }
             catch (SqlException ex)
             {
-                throw new Exception("Error Occurred from the database!", ex);
+                Logger.Log(ex.Message, Logger.LogEntryType.Error);
             }
             catch (Exception ex)
             {
-                throw new Exception("Error Occurred in DAL!", ex);
+                Logger.Log(ex.Message, Logger.LogEntryType.Error);
             }
         }
         public static bool CheckIfPersonHasApplicationForLicenseClassExist(int personID, int licenseClassID)
@@ -66,11 +66,11 @@ namespace DVLD.DAL.Data
             }
             catch (SqlException ex)
             {
-                throw new Exception("Error Occurred from the database!", ex);
+                Logger.Log(ex.Message, Logger.LogEntryType.Error);
             }
             catch (Exception ex)
             {
-                throw new Exception("Error Occurred in DAL!", ex);
+                Logger.Log(ex.Message, Logger.LogEntryType.Error);
             }
         }
         // The query here is not working correctly probably check it later.
@@ -96,11 +96,11 @@ namespace DVLD.DAL.Data
             }
             catch (SqlException ex)
             {
-                throw new Exception("Error Occurred from the database!", ex);
+                Logger.Log(ex.Message, Logger.LogEntryType.Error);
             }
             catch (Exception ex)
             {
-                throw new Exception("Error Occurred in DAL!", ex);
+                Logger.Log(ex.Message, Logger.LogEntryType.Error);
             }
         }
 
@@ -154,11 +154,11 @@ GROUP BY
             }
             catch (SqlException ex)
             {
-                throw new Exception("Error Occurred from the database!", ex);
+                Logger.Log(ex.Message, Logger.LogEntryType.Error);
             }
             catch (Exception ex)
             {
-                throw new Exception("Error Occurred in DAL!", ex);
+                Logger.Log(ex.Message, Logger.LogEntryType.Error);
             }
         }
         public static DataTable GetByID(int ID)
@@ -186,11 +186,11 @@ GROUP BY
             }
             catch (SqlException ex)
             {
-                throw new Exception("Error Occurred from the database!", ex);
+                Logger.Log(ex.Message, Logger.LogEntryType.Error);
             }
             catch (Exception ex)
             {
-                throw new Exception("Error Occurred in DAL!", ex);
+                Logger.Log(ex.Message, Logger.LogEntryType.Error);
             }
         }
         public static DataTable GetByIDDetailed(int ID)
@@ -222,11 +222,11 @@ GROUP BY
             }
             catch (SqlException ex)
             {
-                throw new Exception("Error Occurred from the database!", ex);
+                Logger.Log(ex.Message, Logger.LogEntryType.Error);
             }
             catch (Exception ex)
             {
-                throw new Exception("Error Occurred in DAL!", ex);
+                Logger.Log(ex.Message, Logger.LogEntryType.Error);
             }
         }
 
@@ -282,11 +282,11 @@ GROUP BY
             }
             catch (SqlException ex)
             {
-                throw new Exception("Error Occurred from the database!", ex);
+                Logger.Log(ex.Message, Logger.LogEntryType.Error);
             }
             catch (Exception ex)
             {
-                throw new Exception("Error Occurred in DAL!", ex);
+                Logger.Log(ex.Message, Logger.LogEntryType.Error);
             }
         }
         public static DataTable GetAllFilterBy(string filter, string search)
@@ -367,11 +367,11 @@ GROUP BY
             }
             catch (SqlException ex)
             {
-                throw new Exception("Error Occurred from the database!", ex);
+                Logger.Log(ex.Message, Logger.LogEntryType.Error);
             }
             catch (Exception ex)
             {
-                throw new Exception("Error Occurred in DAL!", ex);
+                Logger.Log(ex.Message, Logger.LogEntryType.Error);
             }
         }
         public static int Delete(int ID)
@@ -394,11 +394,11 @@ WHERE ID = @ID";
             }
             catch (SqlException ex)
             {
-                throw new Exception("Error Occurred from the database!", ex);
+                Logger.Log(ex.Message, Logger.LogEntryType.Error);
             }
             catch (Exception ex)
             {
-                throw new Exception("Error Occurred in DAL!", ex);
+                Logger.Log(ex.Message, Logger.LogEntryType.Error);
             }
         }
         public static int CancelApplication(int ID)
@@ -425,11 +425,11 @@ WHERE ID = @ID";
             }
             catch (SqlException ex)
             {
-                throw new Exception("Error Occurred from the database!", ex);
+                Logger.Log(ex.Message, Logger.LogEntryType.Error);
             }
             catch (Exception ex)
             {
-                throw new Exception("Error Occurred in DAL!", ex);
+                Logger.Log(ex.Message, Logger.LogEntryType.Error);
             }
         }
         public static int GetNumberOfPassedTests(int applicationID)
@@ -459,11 +459,11 @@ WHERE ID = @ID";
             }
             catch (SqlException ex)
             {
-                throw new Exception("Error Occurred from the database!", ex);
+                Logger.Log(ex.Message, Logger.LogEntryType.Error);
             }
             catch (Exception ex)
             {
-                throw new Exception("Error Occurred in DAL!", ex);
+                Logger.Log(ex.Message, Logger.LogEntryType.Error);
             }
         }
     }
